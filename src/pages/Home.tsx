@@ -54,13 +54,98 @@ const customerJourneySteps = [
 
 export default function Home() {
   const reduceMotion = useReducedMotion();
+  const baseUrl = import.meta.env.BASE_URL;
 
   return (
-    <main className="bg-navy-950 overflow-hidden text-slate-200">
+    <main className="bg-[#0A0D14] overflow-hidden text-slate-200">
       <Hero />
 
+      {/* FEATURED WORK (Exact Match to Design Reference) */}
+      <section className="relative bg-[#0A0D14] pt-8 pb-20 border-b border-white/[0.08]" id="projects">
+        <div className="section-container relative z-10">
+          
+          {/* Header Bar */}
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] text-[11px] sm:text-xs font-mono text-slate-400 uppercase tracking-[0.2em]">
+            <span>FEATURED WORK</span>
+            <span className="hidden sm:inline">TWO PROJECTS. A BROADER STORY.</span>
+          </div>
+
+          {/* 2-Column Side-by-Side Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            
+            {/* CARD 01: Service Map Planner */}
+            <Link
+              to="/projects/service-map-planner"
+              className="group relative rounded-xl border border-white/[0.08] bg-[#070A10] p-6 sm:p-8 flex flex-col justify-between hover:border-white/20 transition-all duration-300 overflow-hidden"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-5 flex flex-col items-start">
+                  <span className="font-mono text-xs text-slate-500 mb-2">01 ——</span>
+                  <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight uppercase leading-tight mb-2 group-hover:text-[#D4F435] transition-colors">
+                    Service Map Planner
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                    A field-service planning application for libraries and institutions.
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-xs font-mono text-white group-hover:text-[#D4F435] transition-colors">
+                    <span>View Case Study</span>
+                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+
+                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-black/60 shadow-lg">
+                  <img
+                    src={`${baseUrl}images/service_map_tablet.jpg`}
+                    alt="Service Map Planner Screenshot"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </Link>
+
+            {/* CARD 02: Scale Garage Studio */}
+            <Link
+              to="/projects/scale-garage-studio"
+              className="group relative rounded-xl border border-white/[0.08] bg-[#070A10] p-6 sm:p-8 flex flex-col justify-between hover:border-white/20 transition-all duration-300 overflow-hidden"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div className="md:col-span-5 flex flex-col items-start">
+                  <span className="font-mono text-xs text-slate-500 mb-2">02 ——</span>
+                  <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight uppercase leading-tight mb-2 group-hover:text-[#D4F435] transition-colors">
+                    Scale Garage Studio
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed mb-6">
+                    A 1:18 miniature garage configurator.
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-xs font-mono text-white group-hover:text-[#D4F435] transition-colors">
+                    <span>View 3D Experience</span>
+                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+
+                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-black/60 shadow-lg">
+                  <img
+                    src={`${baseUrl}images/hero_garage_diorama.jpg`}
+                    alt="Scale Garage Studio Diorama"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </Link>
+
+          </div>
+
+          {/* Section Sub-footer */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 mt-8 pt-4 border-t border-white/[0.06] text-[10px] sm:text-xs font-mono text-slate-500 tracking-[0.2em] uppercase">
+            <span>TECHNOLOGY MEETS REAL PEOPLE AND REAL PLACES.</span>
+            <span>BUILD A MORE USEFUL TOMORROW.</span>
+          </div>
+
+        </div>
+      </section>
+
       {/* SECTION 01: Value Propositions (Editorial Glass Cards) */}
-      <section className="section-py relative border-t border-white/[0.05] bg-gradient-to-b from-navy-950 via-cobalt-950 to-navy-950">
+      <section className="section-py relative border-t border-white/[0.05] bg-gradient-to-b from-[#0A0D14] via-cobalt-950 to-[#0A0D14]">
         <div className="section-container relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>

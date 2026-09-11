@@ -40,6 +40,8 @@ export default {
           'cyan-light': '#22D3EE',
           violet: '#8B5CF6',
           'violet-light': '#A78BFA',
+          lime: '#D4F435',
+          'lime-light': '#E5FA6B',
         },
         icy: {
           DEFAULT: '#B8D8EE',
@@ -50,6 +52,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        display: ['Oswald', 'Inter', 'sans-serif'],
       },
       fontSize: {
         // editorial display sizes using clamp

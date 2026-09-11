@@ -45,18 +45,18 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
       >
         <div className="section-container">
           <nav className="flex items-center justify-between h-16 lg:h-18">
-            {/* Logo */}
+            {/* Brand */}
             <Link
               to="/"
               onClick={() => setMobileOpenKey(null)}
-              className="flex items-center gap-2.5 group"
+              className="flex flex-col group"
               aria-label="Jose Garcia — Home"
             >
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-blue to-accent-cyan flex items-center justify-center text-white font-bold text-base shadow-glow-blue group-hover:shadow-glow-cyan transition-all duration-300">
-                JG
-              </div>
-              <span className="hidden sm:block font-semibold text-white text-sm tracking-wide">
+              <span className="font-display font-bold text-white text-lg sm:text-xl tracking-wide leading-none group-hover:text-slate-200 transition-colors">
                 Jose Garcia
+              </span>
+              <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.16em] text-slate-400 mt-1">
+                SOLUTIONS ENGINEER \ TECHNICAL CONSULTANT
               </span>
             </Link>
 
@@ -66,8 +66,8 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
                 <Link
                   key={link.href}
                   to={link.href}
-                  className={`nav-link px-3 py-2 rounded-lg hover:bg-white/5 ${
-                    isActive(link.href) ? 'nav-link-active' : ''
+                  className={`nav-link px-3.5 py-1.5 rounded-lg text-sm text-slate-300 hover:text-white transition-colors ${
+                    isActive(link.href) ? 'nav-link-active text-white' : ''
                   }`}
                 >
                   {link.label}
@@ -81,20 +81,19 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
               <button
                 type="button"
                 onClick={onOpenCommandPalette}
-                className="inline-flex items-center gap-2 rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2 font-mono text-xs text-slate-500 transition-colors hover:border-accent-blue/20 hover:bg-accent-blue/5 hover:text-slate-300"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/[0.07] bg-white/[0.025] px-2.5 py-1.5 font-mono text-xs text-slate-500 transition-colors hover:border-accent-blue/20 hover:bg-accent-blue/5 hover:text-slate-300"
                 aria-label="Open command palette"
               >
-                <Command size={14} />
+                <Command size={13} />
                 <span>K</span>
               </button>
               <a
                 href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
                 download
-                className="btn-secondary py-2 text-sm"
+                className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.04] text-xs font-mono font-medium text-white hover:bg-white/10 hover:border-white/40 transition-all"
                 aria-label="Download Resume PDF"
               >
-                <FileDown size={15} />
-                Resume
+                Resume ↗
               </a>
             </div>
 
