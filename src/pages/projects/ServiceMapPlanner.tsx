@@ -150,34 +150,34 @@ export default function ServiceMapPlanner() {
               glowColor="blue"
               aspectRatio="aspect-[16/10]"
               badges={[
-                { text: '● 157 Healthcare & Academic Sites', position: 'top-left', variant: 'accent', delay: 0.2 },
-                { text: '◎ Real-Time Route Scheduling', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
-                { text: '✓ 40% Field Route Efficiency', position: 'mid-right', variant: 'emerald', delay: 0.6 },
+                { text: '● Multi-Region Account Mapping', position: 'top-left', variant: 'accent', delay: 0.2 },
+                { text: '◎ Maintenance Scheduling', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
+                { text: '✓ Centralized Operational Records', position: 'mid-right', variant: 'emerald', delay: 0.6 },
               ]}
             >
-              <div className="relative w-full h-full bg-navy-900 flex flex-col font-mono select-none">
+              <div className="relative w-full h-full bg-[#0c1010] flex flex-col font-mono select-none">
                 {/* Dashboard Toolbar */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-surface/90 text-xs">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.08] bg-[#111616] text-xs">
                   <div className="flex items-center gap-3">
                     <span className="text-white font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      FLORIDA &amp; SOUTHEAST REGION
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      INSTITUTIONAL SERVICE MAP
                     </span>
                     <span className="text-slate-500 hidden sm:inline">|</span>
-                    <span className="text-slate-400 hidden sm:inline">157 Accounts Loaded</span>
+                    <span className="text-slate-400 hidden sm:inline">Regional Accounts Overview</span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px]">
-                    <span className="px-2 py-0.5 rounded bg-accent-blue/15 text-accent-blue-light border border-accent-blue/30">
+                    <span className="px-2 py-0.5 rounded bg-white/[0.05] text-slate-200 border border-white/10">
                       MAP VIEW
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-white/[0.04] text-slate-400">
-                      FLEET STATS
+                    <span className="px-2 py-0.5 rounded bg-white/[0.02] text-slate-400">
+                      EQUIPMENT
                     </span>
                   </div>
                 </div>
 
                 {/* Map stage */}
-                <div className="relative flex-1 bg-navy-950 overflow-hidden">
+                <div className="relative flex-1 bg-[#070909] overflow-hidden">
                   <svg className="absolute inset-0 w-full h-full opacity-20">
                     <defs>
                       <pattern id="smpGrid" width="28" height="28" patternUnits="userSpaceOnUse">
@@ -208,12 +208,12 @@ export default function ServiceMapPlanner() {
 
                     {/* Nodes */}
                     {[
-                      { x: 180, y: 120, label: 'Univ of Florida', status: 'active', units: 4 },
-                      { x: 320, y: 180, label: 'Orlando Health', status: 'active', units: 6 },
-                      { x: 480, y: 240, label: 'Tampa General', status: 'expiring', units: 3 },
-                      { x: 720, y: 280, label: 'Baptist Health Miami', status: 'active', units: 8 },
-                      { x: 480, y: 390, label: 'Sarasota Memorial', status: 'active', units: 2 },
-                      { x: 260, y: 290, label: 'Moffitt Cancer Ctr', status: 'warning', units: 5 },
+                      { x: 180, y: 120, label: 'University Library Center', status: 'active', units: 4 },
+                      { x: 320, y: 180, label: 'Regional Research Archives', status: 'active', units: 6 },
+                      { x: 480, y: 240, label: 'Metropolitan Campus', status: 'expiring', units: 3 },
+                      { x: 720, y: 280, label: 'State University Repository', status: 'active', units: 8 },
+                      { x: 480, y: 390, label: 'Public Library Consortium', status: 'active', units: 2 },
+                      { x: 260, y: 290, label: 'Special Collections Center', status: 'warning', units: 5 },
                     ].map((node, i) => (
                       <g key={i}>
                         <circle
@@ -245,13 +245,13 @@ export default function ServiceMapPlanner() {
                   </svg>
 
                   {/* Floating selected details card */}
-                  <div className="absolute top-4 right-4 glass-dark p-3.5 rounded-xl border border-white/[0.1] max-w-xs text-xs">
+                  <div className="absolute top-4 right-4 bg-[#111616] p-3.5 rounded-xl border border-white/10 max-w-xs text-xs shadow-float">
                     <div className="text-slate-400 text-[10px] uppercase tracking-wider">SELECTED RECORD</div>
-                    <div className="text-white font-bold mt-0.5">Baptist Health South Florida</div>
+                    <div className="text-white font-bold mt-0.5">State University Repository</div>
                     <div className="mt-2 text-slate-300 text-[11px] space-y-1">
-                      <div>Hardware: <strong>8x Image Access Overhead Scanners</strong></div>
-                      <div>Warranty: <span className="text-emerald-400 font-semibold">Active (Coverage 2026)</span></div>
-                      <div>Last PM Visit: <span className="text-slate-400">14 days ago (Passed)</span></div>
+                      <div>Hardware: <strong>8x Overhead Scanning Systems</strong></div>
+                      <div>Service Status: <span className="text-emerald-400 font-semibold">Active Maintenance</span></div>
+                      <div>Routine Check: <span className="text-slate-400">Preventive Inspection Verified</span></div>
                     </div>
                   </div>
 

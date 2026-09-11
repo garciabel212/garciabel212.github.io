@@ -47,20 +47,18 @@ export default function About() {
                 className="relative"
               >
                 {/* Portrait frame */}
-                <div className="w-64 h-64 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border border-white/10 bg-[#0c1010] shadow-float">
-                  <img
-                    src="/images/profile.jpg"
-                    alt="Jose Garcia — Solutions Engineer"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.currentTarget;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-[#0c1010] text-slate-500 text-sm">📷 TODO: Add profile photo</div>`;
-                      }
-                    }}
-                  />
+                <div className="w-64 h-64 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border border-white/10 bg-[#0c1010] shadow-float flex items-center justify-center relative">
+                  <div className="flex flex-col items-center justify-center p-6 text-center select-none">
+                    <div className="w-20 h-20 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center font-display text-3xl font-black text-white tracking-wider mb-3 shadow-card">
+                      JG
+                    </div>
+                    <span className="font-display font-bold text-white text-base tracking-wide">
+                      Jose Garcia
+                    </span>
+                    <span className="font-mono text-[10px] text-slate-400 uppercase tracking-widest mt-1">
+                      Solutions Engineer
+                    </span>
+                  </div>
                 </div>
                 {/* Status badge */}
                 <div className="absolute -bottom-3 -right-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111616] border border-emerald-500/30 shadow-card">

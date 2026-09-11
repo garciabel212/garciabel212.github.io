@@ -54,11 +54,9 @@ export default function ScreenshotGallery({ screenshots, columns = 1 }: Screensh
                 </div>
                 <div className="text-center">
                   <p className="text-slate-400 font-medium text-sm">{shot.alt}</p>
-                  {shot.todo && (
-                    <p className="text-slate-600 text-xs mt-1">
-                      📸 TODO: Add actual screenshot
-                    </p>
-                  )}
+                  <p className="text-slate-600 text-xs mt-1">
+                    Interface View / Workflow Diagram
+                  </p>
                 </div>
               </div>
             )}
