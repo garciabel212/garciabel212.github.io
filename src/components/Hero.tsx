@@ -119,13 +119,13 @@ export default function Hero() {
 
           </div>
 
-          {/* Right Column: Architectural JG Monogram & Career Snapshot Card */}
+          {/* Right Column: Clean Editorial Portrait Card */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 14 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0c1010] p-6 sm:p-8 relative overflow-hidden"
+              className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0c1010] p-4 sm:p-5 relative overflow-hidden"
               style={{
                 boxShadow: 'var(--shadow-float)',
               }}
@@ -133,65 +133,50 @@ export default function Hero() {
               {/* Subtle top edge highlight */}
               <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
 
-              {/* Header: Monogram & Identity */}
-              <div className="flex items-center gap-4 pb-6 border-b border-white/[0.08]">
-                <div className="w-16 h-16 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center font-display text-2xl font-black text-white tracking-widest shadow-card select-none shrink-0">
-                  JG
-                </div>
-                <div>
-                  <h2 className="font-display text-xl font-bold text-white tracking-wide leading-snug">
-                    Jose Garcia
-                  </h2>
-                  <p className="font-mono text-xs text-slate-400 mt-0.5">
-                    Solutions Engineer
-                  </p>
-                  <div className="flex items-center gap-1.5 mt-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                    <span className="text-[11px] font-mono text-emerald-400">
-                      Open to New Opportunities
+              {/* Portrait Image Container */}
+              <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-white/10 bg-[#070909] mb-4">
+                <img
+                  src={`${baseUrl}images/jose_garcia_portrait.png`}
+                  alt="Jose Garcia — Solutions Engineer & Technical Consultant"
+                  className="w-full h-full object-cover object-top"
+                />
+                
+                {/* Subtle natural vignette at bottom of photo */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c1010]/80 via-transparent to-transparent pointer-events-none" />
+                
+                {/* Active Status Badge in bottom corner */}
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#070909]/90 border border-white/10 backdrop-blur-md">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-mono text-emerald-400 font-medium">
+                      Open to Opportunities
                     </span>
                   </div>
-                </div>
-              </div>
-
-              {/* Competency pillars summary */}
-              <div className="py-5 space-y-3 border-b border-white/[0.08] text-xs">
-                <div className="flex items-start gap-2.5 text-slate-300">
-                  <CheckCircle2 size={15} className="text-white/60 mt-0.5 shrink-0" />
-                  <span><strong>Customer-Facing Pre-Sales:</strong> Discovery, product demos, requirements analysis, technical objection handling.</span>
-                </div>
-                <div className="flex items-start gap-2.5 text-slate-300">
-                  <CheckCircle2 size={15} className="text-white/60 mt-0.5 shrink-0" />
-                  <span><strong>Full Lifecycle Delivery:</strong> Onsite/remote deployments, customer training, post-sales technical account health.</span>
-                </div>
-                <div className="flex items-start gap-2.5 text-slate-300">
-                  <CheckCircle2 size={15} className="text-white/60 mt-0.5 shrink-0" />
-                  <span><strong>Full-Stack Builder:</strong> TypeScript, React, Next.js, Firebase, network &amp; hardware systems integration.</span>
-                </div>
-              </div>
-
-              {/* Quick stats / metadata row */}
-              <div className="pt-4 grid grid-cols-2 gap-4 text-left">
-                <div>
-                  <span className="block font-mono text-[10px] text-slate-500 uppercase tracking-widest">
-                    LOCATION
-                  </span>
-                  <span className="text-xs font-semibold text-slate-200 mt-0.5 block">
+                  <span className="text-[10px] font-mono text-slate-400">
                     Boca Raton, FL
                   </span>
-                  <span className="text-[11px] text-slate-400 block">
-                    Nationwide Travel
+                </div>
+              </div>
+
+              {/* Identity & Core Competencies Footer */}
+              <div className="px-1 pt-1 pb-1">
+                <div className="flex items-baseline justify-between gap-2 mb-2">
+                  <span className="font-display text-lg font-bold text-white tracking-wide">
+                    Jose Garcia
+                  </span>
+                  <span className="font-mono text-[11px] text-slate-400">
+                    B.S. Computer Engineering
                   </span>
                 </div>
-                <div>
-                  <span className="block font-mono text-[10px] text-slate-500 uppercase tracking-widest">
-                    EDUCATION
+                <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-slate-400">
+                  <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/10">
+                    Pre-Sales Discovery
                   </span>
-                  <span className="text-xs font-semibold text-slate-200 mt-0.5 block">
-                    B.S. Computer Eng.
+                  <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/10">
+                    Enterprise Deployments
                   </span>
-                  <span className="text-[11px] text-slate-400 block">
-                    Bilingual English / Spanish
+                  <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/10">
+                    Customer Enablement
                   </span>
                 </div>
               </div>
