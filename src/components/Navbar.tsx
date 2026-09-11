@@ -39,8 +39,8 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-navy-900/95 backdrop-blur-md border-b border-white/[0.06] shadow-lg'
-            : 'bg-transparent'
+            ? 'nav-sticky'
+            : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div className="section-container">
@@ -81,7 +81,7 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
               <button
                 type="button"
                 onClick={onOpenCommandPalette}
-                className="inline-flex items-center gap-2 rounded-lg border border-white/[0.07] bg-white/[0.025] px-2.5 py-1.5 font-mono text-xs text-slate-500 transition-colors hover:border-accent-blue/20 hover:bg-accent-blue/5 hover:text-slate-300"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.025] px-2.5 py-1.5 font-mono text-xs text-slate-400 transition-colors hover:border-white/20 hover:text-slate-200"
                 aria-label="Open command palette"
               >
                 <Command size={13} />
@@ -90,7 +90,7 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
               <a
                 href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
                 download
-                className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full border border-white/20 bg-white/[0.04] text-xs font-mono font-medium text-white hover:bg-white/10 hover:border-white/40 transition-all"
+                className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-xs font-mono font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] hover:border-white/20 transition-all"
                 aria-label="Download Resume PDF"
               >
                 Resume ↗
@@ -118,7 +118,7 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
             transition={{ duration: reduceMotion ? 0 : motionDurations.micro, ease: motionEase }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-navy-900/98 backdrop-blur-md border-b border-white/[0.06]"
+            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-[#070909]/98 backdrop-blur-md border-b border-white/10 shadow-[0_14px_40px_-30px_rgba(0,0,0,0.95)]"
           >
             <div className="section-container py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -128,7 +128,7 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
                   onClick={() => setMobileOpenKey(null)}
                   className={`px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     isActive(link.href)
-                      ? 'bg-accent-blue/10 text-accent-blue-light'
+                      ? 'bg-white/10 text-white font-semibold'
                       : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
@@ -140,7 +140,7 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
                   href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
                   download
                   onClick={() => setMobileOpenKey(null)}
-                  className="flex items-center gap-2 px-4 py-3 text-accent-blue font-medium"
+                  className="flex items-center gap-2 px-4 py-3 text-slate-200 hover:text-white font-medium"
                 >
                   <FileDown size={16} />
                   Download Resume

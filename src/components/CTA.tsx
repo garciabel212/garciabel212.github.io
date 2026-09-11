@@ -16,10 +16,14 @@ export default function CTA({
   primaryLabel = 'Get in Touch',
 }: CTAProps) {
   return (
-    <section className="section-py relative overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-cyan/5" />
-      <div className="absolute inset-0 border-t border-b border-white/[0.04]" />
+    <section className="section-py relative overflow-hidden bg-[#0c1010] border-t border-white/[0.08] section-inset-highlight">
+      {/* Soft ambient overhead lighting */}
+      <div
+        className="absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[350px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255,255,255,0.035) 0%, transparent 70%)',
+        }}
+      />
 
       <div className="section-container relative z-10">
         <Reveal

@@ -43,7 +43,7 @@ export function GarageVisual() {
   }[lightingPreset];
 
   return (
-    <div className="relative w-full h-[520px] rounded-2xl border border-white/[0.08] bg-navy-950/90 overflow-hidden backdrop-blur-xl shadow-product">
+    <div className="relative w-full h-[520px] rounded-2xl border border-white/10 bg-[#0c1010] overflow-hidden shadow-float">
       {/* Dynamic ambient backdrop */}
       <div
         className="absolute inset-0 transition-all duration-700 pointer-events-none"
@@ -61,9 +61,9 @@ export function GarageVisual() {
       </svg>
 
       {/* Top HUD Controls */}
-      <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06] bg-surface-elevated/80 backdrop-blur-md">
+      <div className="relative z-20 flex items-center justify-between px-5 py-3.5 border-b border-white/[0.08] bg-[#111616]">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-accent-blue/10 border border-accent-blue/20 text-xs font-mono text-accent-blue-light">
+          <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/10 text-xs font-mono text-slate-300">
             <Box size={14} />
             <span>SCALE GARAGE 3D</span>
           </div>
@@ -78,7 +78,7 @@ export function GarageVisual() {
             onClick={() => setExploded(!exploded)}
             className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono transition-all ${
               exploded
-                ? 'bg-accent-cyan/20 border border-accent-cyan/40 text-accent-cyan-light shadow-glow-cyan'
+                ? 'bg-white/10 border border-white/25 text-white font-medium shadow-card'
                 : 'bg-white/[0.04] border border-white/[0.06] text-slate-400 hover:text-white'
             }`}
           >
@@ -206,17 +206,15 @@ export function GarageVisual() {
               transition={{ type: 'spring', stiffness: 100, damping: 20 }}
             >
               <div
-                className="h-2 rounded-full border border-white/40 shadow-glow-cyan"
+                className="h-2 rounded-full border border-white/40 shadow-sm"
                 style={{
                   background: lightingStyles.accent,
-                  boxShadow: `0 0 20px ${lightingStyles.glow}`,
                 }}
               />
               <div
-                className="h-2 rounded-full border border-white/40 shadow-glow-cyan"
+                className="h-2 rounded-full border border-white/40 shadow-sm"
                 style={{
                   background: lightingStyles.accent,
-                  boxShadow: `0 0 20px ${lightingStyles.glow}`,
                 }}
               />
             </motion.div>

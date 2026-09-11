@@ -64,23 +64,17 @@ export function ProductFrame({
 
   return (
     <div className={`relative group ${className}`}>
-      {/* Luminous atmospheric background glow */}
-      <div
-        className="absolute -inset-6 rounded-3xl opacity-60 blur-2xl transition-opacity duration-700 group-hover:opacity-100 pointer-events-none"
-        style={{ background: glowStyles[glowColor] }}
-      />
-
       {/* Main product vessel */}
       <div
-        className={`relative rounded-2xl border border-white/[0.08] bg-navy-950/90 shadow-product backdrop-blur-xl overflow-hidden transition-all duration-500 group-hover:border-white/[0.14] group-hover:shadow-glow-${glowColor} ${aspectRatio}`}
+        className={`relative rounded-2xl border border-white/10 bg-[#0c1010] shadow-float overflow-hidden transition-all duration-300 group-hover:border-white/20 ${aspectRatio}`}
         style={tiltStyles}
       >
         {/* Subtle top edge gradient reflection */}
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-20" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent z-20 pointer-events-none" />
 
         {/* Browser / application chrome bar */}
         {(title || url) && (
-          <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-surface-elevated/70 backdrop-blur-md">
+          <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-[#111616]">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />

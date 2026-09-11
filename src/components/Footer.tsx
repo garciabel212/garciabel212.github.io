@@ -28,7 +28,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] bg-navy-900">
+    <footer className="border-t border-white/10 bg-[#070909]">
       <div className="section-container py-12">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
           {/* Brand */}

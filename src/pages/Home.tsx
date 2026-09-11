@@ -57,11 +57,11 @@ export default function Home() {
   const baseUrl = import.meta.env.BASE_URL;
 
   return (
-    <main className="bg-[#0A0D14] overflow-hidden text-slate-200">
+    <main className="bg-[#070909] overflow-hidden text-slate-200">
       <Hero />
 
       {/* FEATURED WORK (Exact Match to Design Reference) */}
-      <section className="relative bg-[#0A0D14] pt-8 pb-20 border-b border-white/[0.08]" id="projects">
+      <section className="relative bg-[#070909] pt-8 pb-20 border-b border-white/[0.08]" id="projects">
         <div className="section-container relative z-10">
           
           {/* Header Bar */}
@@ -76,7 +76,7 @@ export default function Home() {
             {/* CARD 01: Service Map Planner */}
             <Link
               to="/projects/service-map-planner"
-              className="group relative rounded-xl border border-white/[0.08] bg-[#070A10] p-6 sm:p-8 flex flex-col justify-between hover:border-white/20 transition-all duration-300 overflow-hidden"
+              className="card group relative p-6 sm:p-8 flex flex-col justify-between overflow-hidden cursor-pointer"
             >
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                 <div className="md:col-span-5 flex flex-col items-start">
@@ -93,7 +93,7 @@ export default function Home() {
                   </span>
                 </div>
 
-                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-black/60 shadow-lg">
+                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-[#070909]">
                   <img
                     src={`${baseUrl}images/service_map_tablet.jpg`}
                     alt="Service Map Planner Screenshot"
@@ -106,7 +106,7 @@ export default function Home() {
             {/* CARD 02: Scale Garage Studio */}
             <Link
               to="/projects/scale-garage-studio"
-              className="group relative rounded-xl border border-white/[0.08] bg-[#070A10] p-6 sm:p-8 flex flex-col justify-between hover:border-white/20 transition-all duration-300 overflow-hidden"
+              className="card group relative p-6 sm:p-8 flex flex-col justify-between overflow-hidden cursor-pointer"
             >
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                 <div className="md:col-span-5 flex flex-col items-start">
@@ -123,7 +123,7 @@ export default function Home() {
                   </span>
                 </div>
 
-                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-black/60 shadow-lg">
+                <div className="md:col-span-7 overflow-hidden rounded-lg border border-white/10 aspect-[16/10] bg-[#070909]">
                   <img
                     src={`${baseUrl}images/hero_garage_diorama.jpg`}
                     alt="Scale Garage Studio Diorama"
@@ -145,7 +145,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 01: Value Propositions (Editorial Glass Cards) */}
-      <section className="section-py relative border-t border-white/[0.05] bg-gradient-to-b from-[#0A0D14] via-cobalt-950 to-[#0A0D14]">
+      <section className="section-py relative border-t border-white/[0.08] bg-[#0c1010] section-inset-highlight">
         <div className="section-container relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
@@ -172,7 +172,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="card-editorial p-7 flex flex-col justify-between group hover:border-accent-blue/30 transition-all duration-300"
+                  className="card-editorial p-7 flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-6">
@@ -414,7 +414,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 03: Customer Journey & Solution Lifecycle */}
-      <section className="section-py relative bg-navy-900/60 border-t border-white/[0.05]" id="lifecycle">
+      <section className="section-py relative bg-[#0c1010] border-t border-white/[0.08] section-inset-highlight" id="lifecycle">
         <div className="section-container relative z-10">
           <SectionHeader
             eyebrow="03 // END-TO-END METHODOLOGY"
@@ -428,7 +428,7 @@ export default function Home() {
       </section>
 
       {/* SECTION 04: Technical Skills Grid */}
-      <section className="section-py relative border-t border-white/[0.05]">
+      <section className="section-py relative bg-[#070909] border-t border-white/[0.08]">
         <div className="section-container relative z-10">
           <SectionHeader
             eyebrow="04 // TECHNICAL EXPERTISE"

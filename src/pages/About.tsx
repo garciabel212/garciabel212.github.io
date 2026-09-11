@@ -47,7 +47,7 @@ export default function About() {
                 className="relative"
               >
                 {/* Portrait frame */}
-                <div className="w-64 h-64 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border-2 border-accent-blue/20 shadow-glow-blue">
+                <div className="w-64 h-64 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border border-white/10 bg-[#0c1010] shadow-float">
                   <img
                     src="/images/profile.jpg"
                     alt="Jose Garcia — Solutions Engineer"
@@ -57,13 +57,13 @@ export default function About() {
                       target.style.display = 'none';
                       const parent = target.parentElement;
                       if (parent) {
-                        parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-surface-elevated text-slate-500 text-sm">📷 TODO: Add profile photo</div>`;
+                        parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-[#0c1010] text-slate-500 text-sm">📷 TODO: Add profile photo</div>`;
                       }
                     }}
                   />
                 </div>
                 {/* Status badge */}
-                <div className="absolute -bottom-3 -right-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-navy-900 border border-emerald-500/30 shadow-lg">
+                <div className="absolute -bottom-3 -right-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111616] border border-emerald-500/30 shadow-card">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="text-xs text-emerald-400 font-medium">Open to Opportunities</span>
                 </div>

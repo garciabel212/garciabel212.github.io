@@ -28,10 +28,9 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
       onPointerLeave={handlePointerLeave}
       initial={reduceMotion ? false : { opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      whileHover={reduceMotion ? undefined : { y: -5 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: motionDurations.reveal, delay: index * 0.08, ease: motionEase }}
-      className={`spotlight-card group relative card overflow-hidden flex flex-col ${
+      className={`spotlight-card group relative card overflow-hidden flex flex-col cursor-pointer ${
         isFeatured ? 'lg:flex-row' : ''
       }`}
     >
@@ -40,7 +39,7 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
         className={`relative overflow-hidden flex-shrink-0 ${
           isFeatured ? 'h-52 lg:h-auto lg:w-2/5' : 'h-44'
         }`}
-        style={{ background: `linear-gradient(135deg, ${project.coverColor} 0%, #0A0F1E 100%)` }}
+        style={{ background: `linear-gradient(135deg, ${project.coverColor} 0%, #070909 100%)` }}
       >
         <div className="project-preview-scale absolute inset-0 transition-transform duration-500 ease-smooth group-hover:scale-[1.02]">
           <ProjectPreview project={project} />
@@ -66,12 +65,6 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
         <div className="absolute bottom-3 right-3 text-xs text-white/40 font-mono">
           {project.year}
         </div>
-
-        {/* Accent glow overlay on hover */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{ background: `radial-gradient(circle at 50% 50%, ${project.accentColor}20 0%, transparent 70%)` }}
-        />
       </div>
 
       {/* Content */}
