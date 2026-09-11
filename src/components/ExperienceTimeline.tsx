@@ -10,10 +10,11 @@ import {
   MapPin,
   Calendar,
   Briefcase,
+  type LucideIcon,
 } from 'lucide-react';
 import { motionDurations, motionEase } from '@/components/motion';
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, LucideIcon> = {
   Users,
   Settings,
   Network,

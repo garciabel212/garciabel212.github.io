@@ -1,0 +1,65 @@
+import { useEffect, useRef } from 'react';
+import Lenis from 'lenis';
+
+interface SmoothScrollProps {
+  children: React.ReactNode;
+}
+
+export default function SmoothScroll({ children }: SmoothScrollProps) {
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    if (typeof window === 'undefined') return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    // Initialize Lenis with subtle, refined smoothing
+    const lenis = new Lenis({
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential out
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5,
+    });
+
+    lenisRef.current = lenis;
+
+    // Connect requestAnimationFrame loop
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    // Support internal hash anchor navigation
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('#') && href.length > 1) {
+        const targetElement = document.querySelector(href);
+        if (targetElement instanceof HTMLElement) {
+          e.preventDefault();
+          lenis.scrollTo(targetElement, { offset: -30 });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      document.removeEventListener('click', handleAnchorClick);
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  return <>{children}</>;
+}

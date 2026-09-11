@@ -9,7 +9,7 @@ export default function Experience() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <main className="pt-24 pb-0">
+    <main className="pt-24 pb-0 text-[var(--text-primary)]">
       <section className="section-py pb-0">
         <div className="section-container">
           <SectionHeader
@@ -23,12 +23,14 @@ export default function Experience() {
           <ExperienceTimeline entries={experience} compact={false} />
 
           {/* Education & Certs */}
-          <div className="mt-20 grid sm:grid-cols-2 gap-6">
+          <div className="mt-20 grid sm:grid-cols-2 gap-6 text-left">
             {/* Education */}
             <div>
               <div className="flex items-center gap-2 mb-6">
-                <GraduationCap size={18} className="text-accent-blue" />
-                <h2 className="text-lg font-bold text-white">Education</h2>
+                <GraduationCap size={18} className="text-[var(--accent)]" />
+                <h2 className="text-lg font-bold text-[var(--text-primary)] font-display uppercase tracking-wide">
+                  Education
+                </h2>
               </div>
               {education.map((edu) => (
                 <motion.div
@@ -39,13 +41,13 @@ export default function Experience() {
                   transition={{ duration: 0.5 }}
                   className="card p-6"
                 >
-                  <p className="text-white font-bold">{edu.institution}</p>
-                  <p className="text-accent-blue-light text-sm font-medium mt-0.5">{edu.degree} — {edu.field}</p>
-                  <p className="text-slate-500 text-sm mt-1">{edu.period}{edu.gpa ? ` · GPA ${edu.gpa}` : ''}</p>
+                  <p className="text-[var(--text-primary)] font-bold">{edu.institution}</p>
+                  <p className="text-[var(--accent)] text-sm font-medium mt-0.5">{edu.degree} — {edu.field}</p>
+                  <p className="text-[var(--text-muted)] text-sm mt-1">{edu.period}{edu.gpa ? ` · GPA ${edu.gpa}` : ''}</p>
                   <ul className="mt-4 space-y-1.5">
                     {edu.highlights.map((h) => (
-                      <li key={h} className="flex gap-2 text-sm text-slate-400">
-                        <span className="text-accent-cyan/60 flex-shrink-0 mt-0.5">›</span>
+                      <li key={h} className="flex gap-2 text-sm text-[var(--text-secondary)]">
+                        <span className="text-[var(--accent)] flex-shrink-0 mt-0.5">&rsaquo;</span>
                         <span>{h}</span>
                       </li>
                     ))}
@@ -57,8 +59,10 @@ export default function Experience() {
             {/* Certifications */}
             <div>
               <div className="flex items-center gap-2 mb-6">
-                <Award size={18} className="text-accent-blue" />
-                <h2 className="text-lg font-bold text-white">Certifications</h2>
+                <Award size={18} className="text-[var(--accent)]" />
+                <h2 className="text-lg font-bold text-[var(--text-primary)] font-display uppercase tracking-wide">
+                  Certifications
+                </h2>
               </div>
               {certifications.map((cert) => (
                 <motion.div
@@ -69,8 +73,8 @@ export default function Experience() {
                   transition={{ duration: 0.5 }}
                   className="card p-6"
                 >
-                  <p className="text-white font-bold">{cert.name}</p>
-                  <p className="text-slate-400 text-sm mt-0.5">{cert.issuer} · {cert.year}</p>
+                  <p className="text-[var(--text-primary)] font-bold">{cert.name}</p>
+                  <p className="text-[var(--text-secondary)] text-sm mt-0.5">{cert.issuer} · {cert.year}</p>
                 </motion.div>
               ))}
             </div>

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, FileDown, Command } from 'lucide-react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { AnimatedNavIndicator, motionDurations, motionEase } from '@/components/motion';
+import { Menu, X, Command } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import ThemeToggle from './theme/ThemeToggle';
 
 const navLinks = [
-  { label: 'Work', href: '/#projects' },
-  { label: 'Experience', href: '/experience' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'WORK', href: '/#selected-work' },
+  { label: 'EXPERIENCE', href: '/experience' },
+  { label: 'ABOUT', href: '/about' },
+  { label: 'CONTACT', href: '/contact' },
 ];
 
 interface NavbarProps {
@@ -17,11 +17,8 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpenKey, setMobileOpenKey] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const reduceMotion = useReducedMotion();
-  const routeKey = `${location.pathname}${location.hash}`;
-  const mobileOpen = mobileOpenKey === routeKey;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -29,123 +26,144 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname, location.hash]);
+
   const isActive = (href: string) => {
-    if (href === '/#projects') return location.pathname === '/' || location.pathname.startsWith('/projects');
+    if (href.startsWith('/#')) {
+      return location.pathname === '/' && location.hash === href.replace('/', '');
+    }
     return location.pathname === href || location.pathname.startsWith(href + '/');
   };
+
+  const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-250 ${
           scrolled
-            ? 'nav-sticky'
+            ? 'nav-translucent shadow-[var(--shadow-low)]'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div className="section-container">
-          <nav className="flex items-center justify-between h-16 lg:h-18">
-            {/* Brand */}
+          <nav className="flex items-center justify-between h-16 lg:h-20">
+            {/* Identity Brand Mark */}
             <Link
               to="/"
-              onClick={() => setMobileOpenKey(null)}
-              className="flex flex-col group"
-              aria-label="Jose Garcia — Home"
+              className="flex items-baseline gap-2.5 group"
+              aria-label="Jose Garcia — Systems Lab Home"
             >
-              <span className="font-display font-bold text-white text-lg sm:text-xl tracking-wide leading-none group-hover:text-slate-200 transition-colors">
-                Jose Garcia
+              <span className="font-display font-black text-xl tracking-tight text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
+                JG.
               </span>
-              <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.16em] text-slate-400 mt-1">
-                SOLUTIONS ENGINEER \ TECHNICAL CONSULTANT
+              <span className="font-mono text-[10px] tracking-widest text-[var(--text-muted)] uppercase hidden sm:inline-block">
+                SYSTEMS LAB
               </span>
             </Link>
 
-            {/* Desktop nav */}
+            {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className={`nav-link px-3.5 py-1.5 rounded-lg text-sm text-slate-300 hover:text-white transition-colors ${
-                    isActive(link.href) ? 'nav-link-active text-white' : ''
+                  className={`relative px-4 py-2 font-mono text-xs font-semibold tracking-wider transition-colors duration-200 ${
+                    isActive(link.href)
+                      ? 'text-[var(--accent)]'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   {link.label}
-                  {isActive(link.href) && <AnimatedNavIndicator />}
+                  {isActive(link.href) && (
+                    <motion.div
+                      layoutId="nav-active-pip"
+                      className="absolute bottom-0 left-4 right-4 h-[2px] bg-[var(--accent)]"
+                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                  )}
                 </Link>
               ))}
             </div>
 
-            {/* Desktop CTA */}
+            {/* Right Controls: ThemeToggle, CommandPalette, Resume */}
             <div className="hidden md:flex items-center gap-3">
-              <button
-                type="button"
-                onClick={onOpenCommandPalette}
-                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.025] px-2.5 py-1.5 font-mono text-xs text-slate-400 transition-colors hover:border-white/20 hover:text-slate-200"
-                aria-label="Open command palette"
-              >
-                <Command size={13} />
-                <span>K</span>
-              </button>
+              <ThemeToggle />
+
+              {onOpenCommandPalette && (
+                <button
+                  type="button"
+                  onClick={onOpenCommandPalette}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-colors font-mono text-xs"
+                  aria-label="Open command palette"
+                >
+                  <Command size={12} />
+                  <span>K</span>
+                </button>
+              )}
+
               <a
-                href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
+                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
                 download
-                className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-xs font-mono font-medium text-slate-200 hover:text-white hover:bg-white/[0.08] hover:border-white/20 transition-all"
-                aria-label="Download Resume PDF"
+                className="btn-secondary px-3.5 py-1.5 rounded-xl font-mono text-xs font-semibold tracking-wider"
               >
-                Resume ↗
+                R&Eacute;SUM&Eacute;
               </a>
             </div>
 
-            {/* Mobile hamburger */}
-            <button
-              className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-              onClick={() => setMobileOpenKey(mobileOpen ? null : routeKey)}
-              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileOpen}
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+            {/* Mobile Hamburger & Theme Toggle */}
+            <div className="flex md:hidden items-center gap-2">
+              <ThemeToggle />
+              <button
+                type="button"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="p-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)]"
+                aria-label={mobileOpen ? 'Close Menu' : 'Open Menu'}
+              >
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </nav>
         </div>
       </header>
 
-      {/* Mobile drawer */}
+      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -8 }}
-            transition={{ duration: reduceMotion ? 0 : motionDurations.micro, ease: motionEase }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden bg-[#070909]/98 backdrop-blur-md border-b border-white/10 shadow-[0_14px_40px_-30px_rgba(0,0,0,0.95)]"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-x-0 top-16 z-40 p-5 bg-[var(--surface-elevated)] border-b border-[var(--border)] shadow-[var(--shadow-high)] md:hidden flex flex-col gap-4"
           >
-            <div className="section-container py-4 flex flex-col gap-1">
+            <div className="flex flex-col divide-y divide-[var(--border-subtle)]">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  onClick={() => setMobileOpenKey(null)}
-                  className={`px-4 py-3 rounded-lg text-base font-medium transition-colors ${
-                    isActive(link.href)
-                      ? 'bg-white/10 text-white font-semibold'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5'
-                  }`}
+                  onClick={() => setMobileOpen(false)}
+                  className="py-3 font-mono text-sm font-semibold tracking-wider text-[var(--text-primary)] hover:text-[var(--accent)]"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-3 mt-2 border-t border-white/[0.06]">
-                <a
-                  href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
-                  download
-                  onClick={() => setMobileOpenKey(null)}
-                  className="flex items-center gap-2 px-4 py-3 text-slate-200 hover:text-white font-medium"
-                >
-                  <FileDown size={16} />
-                  Download Resume
-                </a>
-              </div>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between border-t border-[var(--border)]">
+              <span className="font-mono text-xs text-[var(--text-muted)]">
+                BOCA RATON, FL
+              </span>
+              <a
+                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
+                download
+                className="btn-lime px-4 py-2 rounded-lg font-mono text-xs font-bold"
+              >
+                R&Eacute;SUM&Eacute; PDF
+              </a>
             </div>
           </motion.div>
         )}

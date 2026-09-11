@@ -4,6 +4,9 @@ import { AnimatePresence, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CommandPalette from '@/components/CommandPalette';
+import Atmosphere from '@/components/background/Atmosphere';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import SmoothScroll from '@/components/motion/SmoothScroll';
 import { PageTransition, ScrollProgress } from '@/components/motion';
 import Home from '@/pages/Home';
 
@@ -18,7 +21,9 @@ const EnterpriseDeployment = lazy(() => import('@/pages/projects/EnterpriseDeplo
 function RouteFallback() {
   return (
     <div className="flex min-h-[55vh] items-center justify-center" role="status" aria-live="polite">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-slate-600">Loading view…</span>
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">
+        LOADING VIEW&hellip;
+      </span>
     </div>
   );
 }
@@ -141,20 +146,30 @@ export default function App() {
   }, []);
 
   return (
-    <HashRouter>
-      <MotionConfig reducedMotion="user">
-        <div className="site-shell min-h-screen flex flex-col bg-navy-900">
-          <ScrollProgress />
-          <Navbar onOpenCommandPalette={openCommandPalette} />
-          <div className="relative z-[1] flex-1">
-            <AppRoutes />
-          </div>
-          <Footer />
-          <AnimatePresence>
-            {commandPaletteOpen && <CommandPalette onClose={closeCommandPalette} />}
-          </AnimatePresence>
-        </div>
-      </MotionConfig>
-    </HashRouter>
+    <ThemeProvider>
+      <SmoothScroll>
+        <HashRouter>
+          <MotionConfig reducedMotion="user">
+            <div className="site-shell min-h-screen flex flex-col relative">
+              {/* Global Living Atmosphere Background */}
+              <Atmosphere />
+
+              <ScrollProgress />
+              <Navbar onOpenCommandPalette={openCommandPalette} />
+
+              <div className="relative z-[1] flex-1">
+                <AppRoutes />
+              </div>
+
+              <Footer />
+
+              <AnimatePresence>
+                {commandPaletteOpen && <CommandPalette onClose={closeCommandPalette} />}
+              </AnimatePresence>
+            </div>
+          </MotionConfig>
+        </HashRouter>
+      </SmoothScroll>
+    </ThemeProvider>
   );
 }

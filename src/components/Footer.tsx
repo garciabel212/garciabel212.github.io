@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import { ExternalLink, Mail, Code2 } from 'lucide-react';
 
 const footerLinks = [
-  { label: 'Work', href: '/projects' },
-  { label: 'Experience', href: '/experience' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'WORK', href: '/#selected-work' },
+  { label: 'EXPERIENCE', href: '/experience' },
+  { label: 'ABOUT', href: '/about' },
+  { label: 'CONTACT', href: '/contact' },
 ];
 
 const socialLinks = [
@@ -28,41 +28,43 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#070909]">
+    <footer className="border-t border-[var(--border)] bg-[var(--surface)] transition-colors duration-250">
       <div className="section-container py-12">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
           {/* Brand */}
-          <div className="flex flex-col items-center md:items-start gap-3">
+          <div className="flex flex-col items-center md:items-start gap-2">
             <Link
               to="/"
-              className="flex items-center gap-2.5"
+              className="flex items-baseline gap-2"
               aria-label="Home"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-blue to-accent-cyan flex items-center justify-center text-white font-bold text-sm">
-                JG
-              </div>
-              <span className="font-semibold text-white text-sm">Jose Garcia</span>
+              <span className="font-display font-black text-xl text-[var(--text-primary)]">
+                JG.
+              </span>
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--text-muted)]">
+                Jose Garcia
+              </span>
             </Link>
-            <p className="text-slate-500 text-sm max-w-xs text-center md:text-left">
-              Solutions Engineer · Sales Engineer · Technical Consultant
+            <p className="font-mono text-xs text-[var(--text-muted)] max-w-sm text-center md:text-left">
+              Solutions Engineer &middot; Sales Engineer &middot; Technical Consultant
             </p>
           </div>
 
-          {/* Nav */}
+          {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {footerLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
-                className="text-slate-500 hover:text-slate-300 text-sm transition-colors"
+                className="font-mono text-xs tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Social */}
-          <div className="flex items-center gap-3">
+          {/* Social Links */}
+          <div className="flex items-center gap-2.5">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
@@ -70,20 +72,20 @@ export default function Footer() {
                 target={href.startsWith('mailto') ? undefined : '_blank'}
                 rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
                 aria-label={label}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/5 border border-white/[0.06] hover:border-accent-blue/30 transition-all duration-200"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-elevated)] border border-[var(--border)] transition-colors"
               >
-                <Icon size={16} />
+                <Icon size={15} />
               </a>
             ))}
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-slate-600 text-xs">
-            © {new Date().getFullYear()} Jose Garcia. Built with React, TypeScript &amp; Tailwind CSS.
+        <div className="mt-10 pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-xs text-[var(--text-muted)]">
+          <p>
+            &copy; {new Date().getFullYear()} Jose Garcia &middot; Systems Lab.
           </p>
-          <p className="text-slate-700 text-xs">
-            Boca Raton, FL
+          <p>
+            Boca Raton, FL &middot; Computer Engineering
           </p>
         </div>
       </div>

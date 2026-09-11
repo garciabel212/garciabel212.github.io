@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState, type ElementType, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BriefcaseBusiness, Code2, FileDown, Mail, Search, UserRound, X } from 'lucide-react';
+import { BriefcaseBusiness, Code2, FileDown, Mail, Search, UserRound, X, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motionDurations, motionEase } from '@/components/motion';
 
@@ -11,7 +11,7 @@ interface CommandPaletteProps {
 interface PaletteCommand {
   label: string;
   hint: string;
-  icon: ElementType;
+  icon: LucideIcon;
   action: () => void;
 }
 

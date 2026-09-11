@@ -4,10 +4,11 @@ import {
   Users,
   Server,
   Code2,
+  type LucideIcon,
 } from 'lucide-react';
 import { Reveal } from '@/components/motion';
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, LucideIcon> = {
   Presentation,
   Users,
   Server,
