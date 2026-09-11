@@ -1,0 +1,160 @@
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import CommandPalette from '@/components/CommandPalette';
+import { PageTransition, ScrollProgress } from '@/components/motion';
+import Home from '@/pages/Home';
+
+const Projects = lazy(() => import('@/pages/Projects'));
+const Experience = lazy(() => import('@/pages/Experience'));
+const About = lazy(() => import('@/pages/About'));
+const Contact = lazy(() => import('@/pages/Contact'));
+const ServiceMapPlanner = lazy(() => import('@/pages/projects/ServiceMapPlanner'));
+const ScaleGarageStudio = lazy(() => import('@/pages/projects/ScaleGarageStudio'));
+const EnterpriseDeployment = lazy(() => import('@/pages/projects/EnterpriseDeployment'));
+
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[55vh] items-center justify-center" role="status" aria-live="polite">
+      <span className="font-mono text-xs uppercase tracking-[0.2em] text-slate-600">Loading view…</span>
+    </div>
+  );
+}
+
+function Loadable({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<RouteFallback />}>{children}</Suspense>;
+}
+
+function AppRoutes() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '');
+      let attempts = 0;
+      let retryTimer: ReturnType<typeof setTimeout> | undefined;
+      const scrollToTarget = () => {
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView();
+          return;
+        }
+        attempts += 1;
+        if (attempts < 20) retryTimer = setTimeout(scrollToTarget, 50);
+      };
+      scrollToTarget();
+      return () => clearTimeout(retryTimer);
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname, location.hash]);
+
+  return (
+    <AnimatePresence mode="sync" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageTransition>
+              <Home />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <PageTransition>
+              <Loadable><Projects /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/projects/service-map-planner"
+          element={
+            <PageTransition>
+              <Loadable><ServiceMapPlanner /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/projects/scale-garage-studio"
+          element={
+            <PageTransition>
+              <Loadable><ScaleGarageStudio /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/projects/enterprise-deployment"
+          element={
+            <PageTransition>
+              <Loadable><EnterpriseDeployment /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/experience"
+          element={
+            <PageTransition>
+              <Loadable><Experience /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <PageTransition>
+              <Loadable><About /></Loadable>
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <PageTransition>
+              <Loadable><Contact /></Loadable>
+            </PageTransition>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+export default function App() {
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const openCommandPalette = useCallback(() => setCommandPaletteOpen(true), []);
+  const closeCommandPalette = useCallback(() => setCommandPaletteOpen(false), []);
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        if (!window.matchMedia('(min-width: 768px)').matches) return;
+        event.preventDefault();
+        setCommandPaletteOpen((open) => !open);
+      }
+    };
+
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, []);
+
+  return (
+    <HashRouter>
+      <MotionConfig reducedMotion="user">
+        <div className="site-shell min-h-screen flex flex-col bg-navy-900">
+          <ScrollProgress />
+          <Navbar onOpenCommandPalette={openCommandPalette} />
+          <div className="relative z-[1] flex-1">
+            <AppRoutes />
+          </div>
+          <Footer />
+          <AnimatePresence>
+            {commandPaletteOpen && <CommandPalette onClose={closeCommandPalette} />}
+          </AnimatePresence>
+        </div>
+      </MotionConfig>
+    </HashRouter>
+  );
+}
