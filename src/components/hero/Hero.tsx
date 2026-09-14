@@ -31,7 +31,7 @@ export default function Hero() {
             >
               <span className="text-[var(--accent)] font-semibold">JOSE GARCIA // SOUTH FLORIDA</span>
               <span className="text-[var(--border-strong)]">&middot;</span>
-              <span>SOLUTIONS ENGINEERING &middot; PRODUCT &middot; SYSTEMS</span>
+              <span>SOLUTIONS ENGINEERING &middot; CUSTOMER ENGINEERING &middot; SYSTEMS</span>
             </motion.div>
 
             {/* Massive Editorial Name Header */}
@@ -39,10 +39,20 @@ export default function Hero() {
               initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE_EXPO, delay: 0.1 }}
-              className="font-display font-black text-hero-giant text-[var(--text-primary)] tracking-tight leading-[0.86] uppercase mb-6 select-none"
+              className="font-display font-black text-hero-giant text-[var(--text-primary)] tracking-tight leading-[0.86] uppercase mb-4 select-none"
             >
               JOSE<br />GARCIA
             </motion.h1>
+
+            {/* Primary Role Tag */}
+            <motion.p
+              initial={reduceMotion ? false : { opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: EASE_EXPO, delay: 0.15 }}
+              className="font-mono text-xs sm:text-sm uppercase tracking-wider text-[var(--accent)] font-semibold mb-3"
+            >
+              Solutions Engineer / Technical Consultant
+            </motion.p>
 
             {/* Core Value Proposition */}
             <motion.p
@@ -51,7 +61,7 @@ export default function Hero() {
               transition={{ duration: 0.6, ease: EASE_EXPO, delay: 0.18 }}
               className="text-lg sm:text-xl md:text-2xl font-medium text-[var(--text-primary)] max-w-2xl leading-snug mb-3"
             >
-              Solutions Engineer building at the intersection of technology, customers, systems, and product.
+              I turn complex technology into solutions customers can deploy, understand, and rely on.
             </motion.p>
 
             <motion.p
@@ -60,7 +70,7 @@ export default function Hero() {
               transition={{ duration: 0.6, ease: EASE_EXPO, delay: 0.22 }}
               className="text-sm sm:text-base text-[var(--text-secondary)] max-w-xl leading-relaxed mb-8"
             >
-              I translate complex technology into solutions people can understand, adopt, and operate.
+              My work spans technical discovery, product demonstrations, hardware and software implementation, Windows and network troubleshooting, customer training, and long-term technical support.
             </motion.p>
 
             {/* Actions / CTAs */}
@@ -87,18 +97,18 @@ export default function Hero() {
                 className="btn-secondary inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-medium text-sm sm:text-base cursor-pointer"
               >
                 <Mail size={16} />
-                <span>CONTACT ME</span>
+                <span>LET&apos;S TALK</span>
               </a>
 
-              {/* Résumé Download */}
+              {/* Résumé Request */}
               <a
-                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
-                download
+                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
+                title="Résumé available on request"
                 className="inline-flex items-center gap-1.5 px-4 py-3 rounded-lg text-sm font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-                aria-label="Download Résumé PDF"
+                aria-label="Request Résumé"
               >
                 <FileDown size={15} />
-                <span>RÉSUMÉ</span>
+                <span>R&Eacute;SUM&Eacute; ON REQUEST</span>
               </a>
             </motion.div>
 
@@ -120,11 +130,11 @@ export default function Hero() {
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
                   <span className="font-mono text-xs font-semibold text-[var(--text-primary)]">
-                    FAU B.S. Computer Engineering
+                    B.S. COMPUTER ENGINEERING &middot; FAU
                   </span>
                 </div>
                 <span className="font-mono text-[11px] text-[var(--text-muted)] block mt-0.5">
-                  English &amp; Spanish &middot; Nationwide Deployments
+                  NATIONWIDE DEPLOYMENTS &middot; ENGLISH &amp; SPANISH &middot; OPEN TO UP TO 40% TRAVEL
                 </span>
               </div>
               <a

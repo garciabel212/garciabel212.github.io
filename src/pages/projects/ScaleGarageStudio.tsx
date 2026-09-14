@@ -1,13 +1,24 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Box, RotateCcw, Palette, FileCode2, DollarSign, Printer } from 'lucide-react';
+import {
+  ArrowLeft,
+  Box,
+  RotateCcw,
+  Palette,
+  Printer,
+  DollarSign,
+  Eye,
+  Layers,
+  Columns,
+  ShieldCheck,
+  Sliders,
+  CheckCircle2,
+  Clock,
+} from 'lucide-react';
 import SectionHeader from '@/components/SectionHeader';
 import TechStack from '@/components/TechStack';
 import ArchitectureDiagram from '@/components/ArchitectureDiagram';
-import ScreenshotGallery from '@/components/ScreenshotGallery';
 import CTA from '@/components/CTA';
-import ProjectPreview from '@/components/ProjectPreview';
-import LazyThreePreviewShell from '@/components/LazyThreePreviewShell';
 import { GarageVisual } from '@/components/GarageVisual';
 import { projects } from '@/data/projects';
 
@@ -26,11 +37,12 @@ const techStack = [
 ];
 
 const architectureNodes = [
-  { label: 'Configurator UI', sublabel: 'React + Tailwind CSS controls', accent: true },
-  { label: 'React Three Fiber', sublabel: 'Declarative 3D scene management' },
-  { label: 'Three.js / WebGL', sublabel: 'Real-time 3D rendering' },
-  { label: 'Parametric Geometry Engine', sublabel: 'Dynamic mesh generation from parameters' },
-  { label: 'STL / Manufacturing Workflow', sublabel: 'Export, validation, production prep', accent: true },
+  { label: 'Configurator UI', sublabel: 'React + Tailwind controls', accent: true },
+  { label: 'Scene State', sublabel: 'Reactive parameter store' },
+  { label: 'React Three Fiber / WebGL', sublabel: 'Real-time 3D scene rendering' },
+  { label: 'Parametric Geometry', sublabel: 'Procedural mesh generation' },
+  { label: 'Printability Validation', sublabel: 'Bambu Lab P2S build constraints' },
+  { label: 'STL & Production Prep', sublabel: 'Direct manufacturing export', accent: true },
 ];
 
 const supportedScales = [
@@ -40,50 +52,67 @@ const supportedScales = [
   { scale: '1:64', desc: 'Hot Wheels and Matchbox scale', active: false },
 ];
 
-const features = [
+const capabilities = [
   {
     icon: Box,
     color: '#06B6D4',
     title: 'Interactive 3D Viewport',
-    desc: 'Full orbit, zoom, and pan controls. Switch between perspective, front, side, and overhead camera views.',
+    desc: 'Interactive 3D viewport with orbit, pan, and zoom controls for spatial inspection.',
+  },
+  {
+    icon: Eye,
+    color: '#3B82F6',
+    title: 'Multi-Angle Camera Views',
+    desc: 'Perspective, front, side, and overhead camera views to inspect proportions accurately.',
   },
   {
     icon: Palette,
     color: '#8B5CF6',
     title: 'Real-Time Customization',
-    desc: 'Change dimensions, materials, colors, wall patterns, floor styles, ceiling configurations, and pillar designs — all updating live in the 3D view.',
+    desc: 'Real-time customization of dimensions, materials, and colors updating live in WebGL.',
+  },
+  {
+    icon: Layers,
+    color: '#EC4899',
+    title: 'Architectural Finishes',
+    desc: 'Wall finish options, floor pattern configurations, and varied ceiling styles.',
+  },
+  {
+    icon: Columns,
+    color: '#6366F1',
+    title: 'Structural Element Placement',
+    desc: 'Pillar designs and structural element placement adapting procedurally to dimensions.',
   },
   {
     icon: RotateCcw,
-    color: '#3B82F6',
-    title: 'Parametric Architecture',
-    desc: 'Every structural element is generated from parameters — so the geometry adapts to any valid combination of dimensions and features without manual modeling.',
+    color: '#14B8A6',
+    title: 'Parametric Geometry Engine',
+    desc: 'Parametric geometry engine that adapts meshes dynamically without manual CAD modeling.',
+  },
+  {
+    icon: ShieldCheck,
+    color: '#10B981',
+    title: 'Build Constraint Validation',
+    desc: 'Bambu Lab P2S build volume constraint validation (256×256×256 mm) prior to export.',
   },
   {
     icon: Printer,
-    color: '#10B981',
-    title: 'Manufacturing Preparation',
-    desc: 'Validates geometry against Bambu Lab P2S build volume constraints. Prepares STL files for production.',
+    color: '#F59E0B',
+    title: 'Print-Ready STL Export',
+    desc: 'Print-ready STL geometry export directly from browser memory for 3D printing.',
   },
   {
-    icon: FileCode2,
-    color: '#F59E0B',
-    title: 'STL Export',
-    desc: 'Exports print-ready STL geometry from the parametric model — bridging browser-based design with physical manufacturing.',
+    icon: Sliders,
+    color: '#06B6D4',
+    title: 'Multi-Scale Architecture',
+    desc: 'Multi-scale architecture with 1:18 as primary baseline; 1:24, 1:43, and 1:64 planned.',
   },
   {
     icon: DollarSign,
     color: '#EF4444',
-    title: 'Cost Estimation',
-    desc: 'Planned: real-time material and production cost estimates as the customer configures their garage.',
+    title: 'Production Cost Estimation',
+    desc: 'Planned: real-time material volume and production cost estimation as the design changes.',
   },
-];
-
-const screenshots = [
-  { alt: '3D Garage Viewport', caption: 'Interactive 3D viewport with orbit controls and real-time configuration', todo: true },
-  { alt: 'Customization Panel', caption: 'Material, color, and dimension controls panel', todo: true },
-  { alt: 'Multi-Scale View', caption: 'Scale selection and dimension configuration', todo: true },
-  { alt: 'STL Export Workflow', caption: 'Manufacturing preparation and export workflow', todo: true },
 ];
 
 export default function ScaleGarageStudio() {
@@ -112,10 +141,11 @@ export default function ScaleGarageStudio() {
             </Link>
 
             <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="tag-cyan">Product</span>
-              <span className="tag-cyan">3D / WebGL</span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-medium">
-                <span className="w-1 h-1 rounded-full bg-amber-400" /> In Development
+              <span className="tag-cyan font-mono text-xs uppercase tracking-wider">
+                CLIENT PRODUCT · IN DEVELOPMENT
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" /> Active Client Project
               </span>
             </div>
 
@@ -125,37 +155,41 @@ export default function ScaleGarageStudio() {
             <p className="text-xl font-medium mb-6" style={{ color: '#22D3EE' }}>
               Browser-Based 3D Configurator &amp; Manufacturing Tool
             </p>
-            <p className="text-lg text-slate-400 leading-relaxed max-w-2xl mb-8">
-              A browser-based 3D configurator for custom scale-model garages and dioramas.
-              Customers design their miniature garage visually before manufacturing — customizing
-              every dimension, material, and architectural feature with a real-time 3D preview,
-              then exporting STL files for production.
+            <p className="text-lg text-slate-300 leading-relaxed max-w-3xl mb-8">
+              A browser-based 3D configurator for custom scale-model garages and dioramas. Customers
+              design their miniature garage visually before manufacturing — customizing dimensions,
+              materials, wall finishes, floor patterns, ceiling configurations, and architectural
+              features with real-time 3D preview, then exporting STL files for 3D printing production.
             </p>
 
-            <div className="flex flex-wrap gap-6 text-sm">
+            <div className="flex flex-wrap gap-8 text-sm">
               <div>
                 <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Role</span>
                 <span className="text-white font-medium">Product Designer &amp; Frontend Engineer</span>
               </div>
               <div>
-                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Timeline</span>
-                <span className="text-white font-medium">2024 – Present</span>
+                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Status</span>
+                <span className="text-amber-300 font-medium">In Development (Client Product)</span>
               </div>
               <div>
                 <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Primary Scale</span>
                 <span className="text-white font-medium">1:18 (1:24 · 1:43 · 1:64 planned)</span>
               </div>
+              <div>
+                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Target Production</span>
+                <span className="text-white font-medium">Bambu Lab P2S (256mm³ envelope)</span>
+              </div>
             </div>
           </motion.div>
 
-          {/* Editorial Banner & Interactive 3D Configurator */}
+          {/* Interactive 3D Configurator */}
           <div className="mt-12 max-w-5xl">
             <div className="mb-4 flex items-center justify-between">
               <span className="font-mono text-xs text-accent-cyan uppercase tracking-[0.25em]">
                 Interactive Configurator Prototype
               </span>
               <span className="font-mono text-xs text-slate-400">
-                LIVE WEBGL TELEMETRY // 60 FPS
+                REAL-TIME THREE.JS / WEBGL VIEWPORT
               </span>
             </div>
             <GarageVisual />
@@ -173,27 +207,27 @@ export default function ScaleGarageStudio() {
             DESIGN IT. SEE IT. BUILD IT.
           </h2>
           <p className="mt-3 text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
-            Zero ambiguity between browser viewport and physical 3D print. Parametric mesh generation with direct STL export for Bambu Lab P2S.
+            Direct parametric geometry generation in browser memory with build-volume validation for Bambu Lab 3D printing.
           </p>
         </div>
       </section>
 
-      {/* Product Concept */}
+      {/* Product Concept & The Problem Worth Solving */}
       <section className="section-py bg-navy-800/40">
         <div className="section-container">
           <div className="max-w-3xl">
             <SectionHeader eyebrow="The Concept" title="The Problem Worth Solving" className="mb-8" />
-            <div className="space-y-4 text-slate-400 text-base leading-relaxed">
+            <div className="space-y-4 text-slate-300 text-base leading-relaxed">
               <p>
                 Scale-model collectors — particularly 1:18 die-cast car enthusiasts — want custom display
                 environments that match their collection's theme. Custom miniature garages and dioramas
-                are desirable, but ordering one means describing your vision in a text order form and
-                hoping the manufacturer interprets it correctly.
+                are desirable, but ordering one traditionally means describing a vision in a text order form
+                and hoping the manufacturer interprets it correctly.
               </p>
               <p>
                 Scale Garage Studio removes that ambiguity. Instead of describing what you want, you configure
                 it visually in 3D — selecting exact dimensions, wall finishes, floor patterns, ceiling styles,
-                pillar designs, lighting configurations, and graffiti designs. What you see is what gets manufactured.
+                pillar designs, and lighting configurations. What you see is what gets manufactured.
               </p>
               <p>
                 On the production side, the same parametric model that powers the configurator generates
@@ -239,26 +273,32 @@ export default function ScaleGarageStudio() {
       {/* Architecture */}
       <section className="section-py">
         <div className="section-container">
-          <SectionHeader eyebrow="Architecture" title="System Design" className="mb-10" />
-          <div className="max-w-sm">
+          <SectionHeader
+            eyebrow="Architecture"
+            title="From customer idea to manufacturable design"
+            description="How the application translates interactive browser controls directly into validated manufacturing files."
+            className="mb-10"
+          />
+          <div className="max-w-md">
             <ArchitectureDiagram
-              title="Configurator Architecture"
+              title="Configurator &amp; Manufacturing Pipeline"
               nodes={architectureNodes}
             />
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* 10 Capabilities */}
       <section className="section-py bg-navy-800/40">
         <div className="section-container">
           <SectionHeader
             eyebrow="Features"
-            title="Configurator Capabilities"
+            title="Product Capabilities"
+            description="Ten core functional capabilities built into the 3D configurator and production pipeline."
             className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => {
+            {capabilities.map((f, i) => {
               const Icon = f.icon;
               return (
                 <motion.div
@@ -266,7 +306,7 @@ export default function ScaleGarageStudio() {
                   initial={reduceMotion ? false : { opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
                   className="card p-6"
                 >
                   <div
@@ -284,51 +324,107 @@ export default function ScaleGarageStudio() {
         </div>
       </section>
 
-      {/* Screenshots */}
-      <section className="section-py">
-        <div className="section-container">
-          <SectionHeader
-            eyebrow="Interface"
-            title="Configurator Views"
-            description="In-progress screenshots will be added as the configurator reaches each milestone."
-            className="mb-10"
-          />
-          <ScreenshotGallery screenshots={screenshots} columns={2} />
-        </div>
-      </section>
-
       {/* Manufacturing angle */}
-      <section className="section-py bg-navy-800/40">
+      <section className="section-py">
         <div className="section-container max-w-3xl">
           <SectionHeader eyebrow="Manufacturing" title="From Browser to Build Plate" className="mb-8" />
-          <div className="space-y-4 text-slate-400 text-base leading-relaxed">
+          <div className="space-y-4 text-slate-300 text-base leading-relaxed">
             <p>
-              One of the more technically interesting aspects of this project is the manufacturing
-              pipeline. The same parametric geometry that renders in the browser is the geometry
-              that gets exported as an STL file — there's no separate CAD process for production.
+              The most technically interesting aspect of this project is the manufacturing pipeline.
+              The same parametric geometry that renders in the browser is the geometry that gets exported
+              as an STL file — there's no separate CAD process for production.
             </p>
             <p>
-              The system validates every configuration against the Bambu Lab P2S's build volume
-              before export, catching configurations that would require splitting or reprinting.
-              This closes the loop between customer customization and physical production.
+              The system validates configurations against the Bambu Lab P2S's build volume before export,
+              catching configurations that would require splitting or reprinting. This closes the loop
+              between customer customization and physical production.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Future */}
+      {/* Development & Milestone Status (replaces empty screenshot placeholders) */}
+      <section className="section-py bg-navy-800/40">
+        <div className="section-container max-w-4xl">
+          <SectionHeader
+            eyebrow="Development Status"
+            title="Current Milestone &amp; Engineering Progress"
+            description="Scale Garage Studio is an active client engagement currently in development, not a finished SaaS product."
+            className="mb-8"
+          />
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="card p-6 border-emerald-500/20 bg-emerald-500/5">
+              <div className="flex items-center gap-2 mb-4 text-emerald-400 font-semibold text-sm">
+                <CheckCircle2 size={16} /> Operational in Current Build
+              </div>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                  <span>Interactive 3D configurator core with orbit, pan, and zoom</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                  <span>Parametric geometry mesh generation for walls, floors, and pillars</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                  <span>Real-time color, material finish, and camera perspective switching</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                  <span>Bambu Lab P2S (256mm³) build volume constraint verification</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
+                  <span>Direct browser-memory STL geometry export pipeline</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="card p-6 border-amber-500/20 bg-amber-500/5">
+              <div className="flex items-center gap-2 mb-4 text-amber-400 font-semibold text-sm">
+                <Clock size={16} /> In Active Development
+              </div>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400 mt-0.5 font-bold">→</span>
+                  <span>Multi-part interlocking assembly splits for larger garage dioramas</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400 mt-0.5 font-bold">→</span>
+                  <span>Customer design save/load session state persistence</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400 mt-0.5 font-bold">→</span>
+                  <span>Automated material cost and 3D print time estimation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400 mt-0.5 font-bold">→</span>
+                  <span>Full customer ordering and quote checkout flow</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-400 mt-0.5 font-bold">→</span>
+                  <span>Expansion from 1:18 to 1:24, 1:43, and 1:64 scale presets</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Future Roadmap */}
       <section className="section-py">
         <div className="section-container max-w-3xl">
-          <SectionHeader eyebrow="Roadmap" title="What's Next" className="mb-8" />
+          <SectionHeader eyebrow="Roadmap" title="Next Engineering Releases" className="mb-8" />
           <ul className="space-y-3">
             {[
-              'Complete 1:18 garage configurator with full wall, floor, and ceiling systems',
-              'Customer ordering workflow — design → quote → order',
-              'Material cost estimation integrated into the configurator',
-              'Lighting configuration with preview in 3D viewport',
-              'Graffiti and graphic design panel',
+              'Complete 1:18 garage configurator with modular wall and ceiling light systems',
+              'Customer ordering workflow — design → parametric validation → quote → order',
+              'Material cost estimation integrated directly into the configurator telemetry',
+              'Lighting configuration with real-time lumen preview in 3D WebGL viewport',
+              'Graffiti and decal placement panel with projected texture mapping',
               'Expand to 1:24 and 1:64 scale configurations',
-              'Customer design save/load and sharing',
+              'Customer design save/load and collaborative sharing links',
             ].map((item) => (
               <li key={item} className="flex gap-3 text-slate-400 text-sm">
                 <span className="text-accent-cyan flex-shrink-0 mt-0.5">›</span>
@@ -340,9 +436,10 @@ export default function ScaleGarageStudio() {
       </section>
 
       <CTA
-        title="Interested in the 3D engineering?"
-        description="Happy to discuss the parametric geometry approach, WebGL rendering decisions, or the manufacturing workflow."
+        title="Interested in the 3D configurator or manufacturing pipeline?"
+        description="Happy to discuss parametric geometry generation, WebGL rendering architecture, or physical manufacturing integration."
       />
     </main>
   );
 }
+

@@ -11,9 +11,9 @@ export default function Projects() {
         <div className="section-container">
           <SectionHeader
             eyebrow="Portfolio"
-            title="Work &"
-            titleHighlight="Case Studies"
-            description="A look at the products I've built, the systems I've implemented, and the customer problems I've solved."
+            title="Selected"
+            titleHighlight="Work"
+            description="A combination of professional customer-engineering experience and products I designed and built to solve practical problems."
             className="mb-16"
           />
 

@@ -3,10 +3,10 @@ import { motion, useScroll, useTransform, useReducedMotion, useSpring, useMotion
 import { Lock, Activity, Box, Compass, Layers, CheckCircle2 } from 'lucide-react';
 import { useDeviceOrientation } from '../../hooks/useDeviceOrientation';
 
-export type ProjectVisualVariant = 'application' | 'product' | 'default' | 'extended';
+export type ProjectVisualVariant = 'application' | 'product' | 'deployment' | 'default' | 'extended';
 
 interface ProjectVisualProps {
-  imageSrc: string;
+  imageSrc?: string;
   altText: string;
   caption?: string;
   badge?: string;
@@ -41,11 +41,8 @@ export default function ProjectVisual({
   useEffect(() => {
     if (reduceMotion) return;
     if (isMobile && (Math.abs(gyroTiltX) > 0.01 || Math.abs(gyroTiltY) > 0.01)) {
-      // Tilt card up to +/- 3 degrees based on phone orientation
       rawTiltX.set(gyroTiltX * 3);
       rawTiltY.set(-gyroTiltY * 3);
-
-      // Shift dynamic light across the glass surface
       setLightX(50 + gyroTiltX * 40);
       setLightY(50 + gyroTiltY * 40);
     }
@@ -67,7 +64,6 @@ export default function ProjectVisual({
     const px = (e.clientX - rect.left) / rect.width;
     const py = (e.clientY - rect.top) / rect.height;
 
-    // Max tilt +/- 2.5 degrees
     rawTiltX.set((px - 0.5) * 3);
     rawTiltY.set(-(py - 0.5) * 3);
 
@@ -121,6 +117,7 @@ export default function ProjectVisual({
 
   const isApp = variant === 'application';
   const isProduct = variant === 'product' || variant === 'extended';
+  const isDeployment = variant === 'deployment';
 
   return (
     <div
@@ -128,7 +125,7 @@ export default function ProjectVisual({
       className={`relative w-full ${isProduct ? 'lg:-mr-6' : ''}`}
       style={{ perspective: 1400 }}
     >
-      {/* Visual backdrop / architectural pedestal for Product Variant */}
+      {/* Visual backdrop for Product Variant */}
       {isProduct && (
         <div
           className="absolute -inset-2 sm:-inset-4 rounded-3xl bg-[var(--surface-highlight)]/40 border border-[var(--border-subtle)] -z-10 translate-y-2 sm:translate-y-3 blur-xs hidden sm:block"
@@ -136,8 +133,8 @@ export default function ProjectVisual({
         />
       )}
 
-      {/* Background offset plate for Application Variant */}
-      {isApp && (
+      {/* Background offset plate for Application & Deployment */}
+      {(isApp || isDeployment) && (
         <div
           className="absolute -inset-2 sm:-inset-5 rounded-3xl bg-gradient-to-br from-[var(--surface)]/80 via-transparent to-[var(--bg-secondary)] border border-[var(--border-subtle)] -z-10 translate-x-1 sm:translate-x-2 translate-y-1 sm:translate-y-2 hidden sm:block"
           aria-hidden="true"
@@ -168,7 +165,7 @@ export default function ProjectVisual({
             : 'p-2 sm:p-4 shadow-[var(--shadow-floating)]'
         }`}
       >
-        {/* Dynamic ambient specular reflection on hover & phone tilt */}
+        {/* Dynamic ambient specular reflection */}
         <div
           className="pointer-events-none absolute inset-0 transition-opacity duration-300 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 z-20"
           style={{
@@ -177,30 +174,41 @@ export default function ProjectVisual({
           aria-hidden="true"
         />
 
-        {/* ─── CHROME HEADER: Tailored per Variant ─── */}
-        {isApp ? (
+        {/* ─── CHROME HEADER ─── */}
+        {isDeployment ? (
+          /* Enterprise Deployment Chrome */
+          <div className="flex items-center justify-between px-2.5 sm:px-4 py-2 sm:py-2.5 border-b border-[var(--border-subtle)] mb-2 sm:mb-3 bg-[var(--bg-secondary)]/50 rounded-t-xl">
+            <div className="flex items-center gap-2">
+              <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-violet-400/80" />
+              <span className="font-mono text-[10px] sm:text-[11px] font-semibold text-[var(--text-primary)] uppercase tracking-wider">
+                ENTERPRISE DEPLOYMENT // FIELD TOPOLOGY
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[9px] sm:text-[10px] uppercase text-[var(--text-muted)] tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-semibold text-[var(--text-primary)]">DLSG / IMAGE ACCESS</span>
+            </div>
+          </div>
+        ) : isApp ? (
           /* Application Browser / OS Chrome */
           <div className="flex items-center justify-between px-2.5 sm:px-4 py-2 sm:py-2.5 border-b border-[var(--border-subtle)] mb-2 sm:mb-3 bg-[var(--bg-secondary)]/50 rounded-t-xl">
-            {/* Window control dots */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FF5F56]/80" />
               <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FFBD2E]/80" />
               <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#27C93F]/80" />
             </div>
 
-            {/* Simulated secure URL bar */}
             <div className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-[var(--surface)] border border-[var(--border-subtle)] text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)] tracking-wider">
               <Lock size={10} className="text-[var(--accent)]" />
-              <span className="truncate max-w-[140px] sm:max-w-none">servicemap.internal/ops</span>
+              <span className="truncate max-w-[140px] sm:max-w-none">ops.internal/servicemap</span>
             </div>
 
-            {/* Right Live Beacon */}
             <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[9px] sm:text-[10px] uppercase text-[var(--text-muted)] tracking-widest">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
               </span>
-              <span className="font-semibold text-[var(--text-primary)]">SYS ACTIVE</span>
+              <span className="font-semibold text-[var(--text-primary)]">INTERNAL TOOL</span>
             </div>
           </div>
         ) : isProduct ? (
@@ -211,13 +219,12 @@ export default function ProjectVisual({
               <span className="font-semibold text-[var(--text-primary)]">3D VIEWPORT // ORBIT</span>
             </div>
 
-            {/* Viewport tool indicators */}
             <div className="flex items-center gap-2 sm:gap-3 font-mono text-[9px] sm:text-[10px] text-[var(--text-muted)]">
               <span className="inline-flex items-center gap-1">
                 <Compass size={10} /> 1:18
               </span>
               <span className="px-1.5 sm:px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--accent-text)] font-semibold text-[9px]">
-                R3F
+                IN DEVELOPMENT
               </span>
             </div>
           </div>
@@ -235,16 +242,49 @@ export default function ProjectVisual({
           </div>
         )}
 
-        {/* ─── MAIN IMAGE FRAME ─── */}
+        {/* ─── MAIN FRAME ─── */}
         <div className={`relative w-full rounded-xl sm:rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border)] ${
           isProduct ? 'aspect-[16/11]' : 'aspect-[16/10]'
         }`}>
-          <img
-            src={imageSrc}
-            alt={altText}
-            loading="lazy"
-            className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
-          />
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt={altText}
+              loading="lazy"
+              className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
+            />
+          ) : isDeployment ? (
+            /* Enterprise Topology Graphic Blueprint */
+            <div className="relative w-full h-full bg-[#0d091a] flex flex-col items-center justify-center p-6 text-center font-mono select-none overflow-hidden">
+              <div
+                className="absolute inset-0 opacity-25"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, rgba(139,92,246,0.3) 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                }}
+              />
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 360" fill="none">
+                <path d="M 120 180 H 480" stroke="rgba(139,92,246,0.35)" strokeWidth="1.5" strokeDasharray="6 4" />
+                <path d="M 300 90 V 270" stroke="rgba(6,182,212,0.35)" strokeWidth="1.5" strokeDasharray="6 4" />
+                <circle cx="300" cy="180" r="44" fill="#130c2b" stroke="#8B5CF6" strokeWidth="2" />
+                <circle cx="120" cy="180" r="28" fill="#130c2b" stroke="#06B6D4" strokeWidth="1.5" />
+                <circle cx="480" cy="180" r="28" fill="#130c2b" stroke="#10B981" strokeWidth="1.5" />
+                <circle cx="300" cy="90" r="24" fill="#130c2b" stroke="#F59E0B" strokeWidth="1.5" />
+                <circle cx="300" cy="270" r="24" fill="#130c2b" stroke="#EC4899" strokeWidth="1.5" />
+              </svg>
+              <div className="relative z-10 flex flex-col items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 text-xs font-semibold">
+                  DISCOVERY &middot; DEPLOYMENT &middot; ENABLEMENT
+                </span>
+                <p className="text-white font-display text-lg sm:text-xl font-bold uppercase tracking-wide mt-1">
+                  Enterprise Customer Implementation
+                </p>
+                <p className="text-slate-400 text-xs max-w-sm">
+                  Specialized scanning hardware, Windows systems, network integration, and customer training
+                </p>
+              </div>
+            </div>
+          ) : null}
 
           {/* Subtle directional glare / glass reflection overlay */}
           <div
@@ -254,7 +294,25 @@ export default function ProjectVisual({
             }}
           />
 
-          {/* Floating UI Widget for Application: Live Ops Telemetry Chip */}
+          {/* Floating Telemetry Chip for Deployment */}
+          {isDeployment && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="absolute bottom-2.5 left-2.5 sm:bottom-4 sm:left-4 z-10 flex items-center gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] shadow-[var(--shadow-medium)] text-[9px] sm:text-[11px] font-mono"
+            >
+              <Activity size={12} className="text-violet-400 animate-pulse" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-[var(--text-primary)] font-semibold">Professional Experience</span>
+                <span className="text-[var(--border-strong)]">&middot;</span>
+                <span className="text-[var(--text-muted)]">Nationwide Deployments</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Floating UI Widget for Application: Verified status chip */}
           {isApp && (
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 10 }}
@@ -265,14 +323,14 @@ export default function ProjectVisual({
             >
               <Activity size={12} className="text-[var(--accent)] animate-pulse" />
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="text-[var(--text-primary)] font-semibold">14 Fleets</span>
+                <span className="text-[var(--text-primary)] font-semibold">Active Internal Tool</span>
                 <span className="text-[var(--border-strong)]">&middot;</span>
-                <span className="text-[var(--text-muted)]">99.8% SLA</span>
+                <span className="text-[var(--text-muted)]">Field Service Operations</span>
               </div>
             </motion.div>
           )}
 
-          {/* Floating UI Widget for Product: Material Specimen & R3F Pill */}
+          {/* Floating UI Widget for Product: 3D status chip */}
           {isProduct && (
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 10 }}
@@ -282,9 +340,9 @@ export default function ProjectVisual({
               className="absolute bottom-2.5 right-2.5 sm:bottom-4 sm:right-4 z-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] shadow-[var(--shadow-medium)] text-[9px] sm:text-[11px] font-mono"
             >
               <Layers size={12} className="text-[var(--accent)]" />
-              <span className="text-[var(--text-primary)] font-semibold">DIE-CAST</span>
+              <span className="text-[var(--text-primary)] font-semibold">1:18 SCALE</span>
               <span className="text-[var(--border-strong)]">&middot;</span>
-              <span className="text-[var(--accent)] font-medium">1:18 SPEC</span>
+              <span className="text-[var(--accent)] font-medium">IN DEVELOPMENT</span>
             </motion.div>
           )}
         </div>
@@ -307,7 +365,7 @@ export default function ProjectVisual({
           ) : (
             <span className="text-[var(--accent)] font-semibold tracking-wider flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              {isProduct ? 'HYBRID ARCHITECTURE' : 'MISSION CRITICAL'}
+              {isDeployment ? 'CUSTOMER ENGINEERING' : isProduct ? '3D CONFIGURATOR' : 'FIELD OPERATIONS'}
             </span>
           )}
         </div>

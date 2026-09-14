@@ -3,48 +3,56 @@ import { motion, useReducedMotion } from 'framer-motion';
 interface SpecCategory {
   number: string;
   category: string;
-  specs: { name: string; detail: string }[];
+  specs: { name: string; detail?: string }[];
 }
 
 const technicalCatalog: SpecCategory[] = [
   {
     number: '01',
-    category: 'CUSTOMER & SALES ENGINEERING',
+    category: 'CUSTOMER & SOLUTIONS',
     specs: [
-      { name: 'Technical Discovery', detail: 'Requirements mapping, security auditing, and stakeholder alignment' },
-      { name: 'Product Demonstrations', detail: 'Tailored live hardware/software demonstrations & proof-of-concept testing' },
-      { name: 'Customer Enablement', detail: 'Administrator training workshops, operator runbooks, and change management' },
-      { name: 'Technical Consulting', detail: 'RFP evaluations, workflow optimization, and institutional scoping' },
+      { name: 'Technical Discovery', detail: 'Clarifying requirements, environment, stakeholders, and constraints' },
+      { name: 'Requirements Gathering', detail: 'Mapping institutional needs and technical specifications' },
+      { name: 'Solution Design', detail: 'Architecting practical configurations and deployment plans' },
+      { name: 'Product Demonstrations', detail: 'Tailored live software and hardware evaluations' },
+      { name: 'Technical Presentations', detail: 'Communicating solution value to decision-makers and IT teams' },
+      { name: 'Proof-of-Concept Support', detail: 'Validating feasibility and de-risking customer commitments' },
     ],
   },
   {
     number: '02',
-    category: 'SYSTEMS & FIELD ARCHITECTURE',
+    category: 'IMPLEMENTATION & SYSTEMS',
     specs: [
-      { name: 'Windows Administration', detail: 'OS configuration, policy hardening, peripheral driver integration' },
-      { name: 'Networking Topologies', detail: 'TCP/IP routing, DNS, VLAN integration, SMB/SFTP network storage' },
-      { name: 'Hardware Integration', detail: 'Optical scanners, Bookeye systems, custom camera/lighting calibration' },
-      { name: 'Diagnostics & Telemetry', detail: 'Root-cause incident analysis, log inspection, performance tuning' },
+      { name: 'Enterprise Implementation', detail: 'Onsite and remote rollouts across institutional facilities' },
+      { name: 'Hardware Integration', detail: 'Specialized scanning hardware and optical system setup' },
+      { name: 'Windows Administration', detail: 'OS diagnostics, policy hardening, and device integration' },
+      { name: 'Network Configuration', detail: 'TCP/IP routing, DNS, VLANs, and network storage endpoints' },
+      { name: 'Software Deployment', detail: 'Installation, configuration, licensing, and validation' },
+      { name: 'Diagnostics and Root-Cause Analysis', detail: 'System-level troubleshooting and escalation resolution' },
     ],
   },
   {
     number: '03',
-    category: 'SOFTWARE & TOOL BUILDING',
+    category: 'PRODUCT & TOOLING',
     specs: [
-      { name: 'Frontend Engineering', detail: 'React 19, TypeScript, Next.js, TailwindCSS, State Management' },
-      { name: 'Interactive 3D / WebGL', detail: 'Three.js, React Three Fiber, Drei, 3D parametric configurators' },
-      { name: 'Cloud & Database', detail: 'Firebase Authentication, Firestore real-time databases, REST APIs' },
-      { name: 'Internal Tooling', detail: 'Custom operations platforms, Service Map Planner, field diagnostics' },
+      { name: 'React', detail: 'Modern component architecture and state management' },
+      { name: 'TypeScript', detail: 'Typed, scalable frontend and application logic' },
+      { name: 'Next.js', detail: 'Production web application architecture and routing' },
+      { name: 'Firebase and Firestore', detail: 'Real-time databases, authentication, and cloud persistence' },
+      { name: 'Three.js and WebGL', detail: 'Browser-based 3D configurators and interactive graphics' },
+      { name: 'Internal Operations Platforms', detail: 'Bespoke tooling like Service Map Planner for field teams' },
     ],
   },
   {
     number: '04',
-    category: 'PRODUCT & EXECUTION',
+    category: 'EXECUTION & COMMUNICATION',
     specs: [
-      { name: 'Workflow Architecture', detail: 'Identifying operational bottlenecks and architecting targeted tools' },
-      { name: 'Rapid Prototyping', detail: 'Translating field requirements directly into working production web apps' },
-      { name: 'Cross-Functional Sync', detail: 'Bridging sales, customer support, factory engineering, and clients' },
-      { name: 'Bilingual Communication', detail: 'Native English & Spanish fluency across written and verbal technical domains' },
+      { name: 'Customer Training', detail: 'Empowering administrators and end users for sustained adoption' },
+      { name: 'Technical Documentation', detail: 'Creating clear runbooks, guides, and procedural handoffs' },
+      { name: 'Multi-Site Coordination', detail: 'Managing logistics and nationwide deployment schedules' },
+      { name: 'Escalation Management', detail: 'Resolving critical incidents and maintaining customer confidence' },
+      { name: 'Cross-Functional Collaboration', detail: 'Connecting sales, customer success, and engineering' },
+      { name: 'English and Spanish Communication', detail: 'Bilingual technical fluency across verbal and written domains' },
     ],
   },
 ];
@@ -60,20 +68,20 @@ export default function TechnicalIndex() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[var(--border-subtle)] mb-14">
           <div>
             <span className="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-[var(--accent)]">
-              05 // TECHNICAL CAPABILITIES SPECIFICATION
+              05 // CAPABILITIES
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase text-[var(--text-primary)] tracking-tight mt-2 font-display">
-              Technical Index.
+              What I bring to a technical customer role
             </h2>
           </div>
           <p className="max-w-md text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-            A comprehensive engineering specification catalog outlining customer-facing, systems, and product competencies.
+            A combination of customer-facing engineering, systems knowledge, implementation experience, and practical software development.
           </p>
         </div>
 
         {/* Specification Sheet Layout */}
         <div className="space-y-12">
-          {technicalCatalog.map((section, sIdx) => (
+          {technicalCatalog.map((section) => (
             <div key={section.category} className="border-t border-[var(--border)] pt-6">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
@@ -106,9 +114,11 @@ export default function TechnicalIndex() {
                           {item.name}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm text-[var(--text-secondary)] font-normal text-left sm:text-right">
-                        {item.detail}
-                      </span>
+                      {item.detail && (
+                        <span className="text-xs sm:text-sm text-[var(--text-secondary)] font-normal text-left sm:text-right">
+                          {item.detail}
+                        </span>
+                      )}
                     </motion.div>
                   ))}
                 </div>

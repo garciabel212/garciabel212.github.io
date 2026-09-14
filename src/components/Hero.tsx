@@ -96,13 +96,12 @@ export default function Hero() {
 
               {/* Secondary CTA */}
               <a
-                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
-                download
+                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia"
                 className="btn-secondary inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-medium text-sm sm:text-base"
-                aria-label="Download Résumé PDF"
+                aria-label="Request Résumé"
               >
                 <FileDown size={16} />
-                <span>Download résumé</span>
+                <span>Résumé on request</span>
               </a>
 
               {/* Tertiary Link */}

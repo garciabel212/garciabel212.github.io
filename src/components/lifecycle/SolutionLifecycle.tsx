@@ -5,44 +5,44 @@ const lifecycleSteps = [
   {
     step: '01',
     name: 'DISCOVER',
-    subtitle: 'Technical Discovery',
-    description: 'Uncovering architectural requirements, networking constraints, security requirements, and institutional workflows directly with customer IT stakeholders.',
-    skills: ['Needs Analysis', 'IT Security Requirements', 'Scope Definition'],
+    subtitle: 'Discovery',
+    description: 'Clarify customer goals, technical requirements, environment, stakeholders, and constraints.',
+    skills: ['Needs Analysis', 'Environment Scoping', 'Constraints Mapping'],
   },
   {
     step: '02',
     name: 'DESIGN',
-    subtitle: 'Solution Architecture',
-    description: 'Synthesizing software configuration, hardware specifications, and network topologies into concrete, reproducible implementation blueprints.',
-    skills: ['System Specifications', 'Topology Mapping', 'Validation Criteria'],
+    subtitle: 'Design',
+    description: 'Translate requirements into a practical solution, configuration, and implementation plan.',
+    skills: ['Solution Blueprint', 'Configuration Planning', 'Timeline & Rollout'],
   },
   {
     step: '03',
     name: 'DEMONSTRATE',
-    subtitle: 'Proof of Concept & Demos',
-    description: 'Delivering tailored technical product demonstrations, addressing tough technical objections, and de-risking high-value enterprise commitments.',
-    skills: ['Live Technical Demos', 'PoC Execution', 'Objection Handling'],
+    subtitle: 'Demonstrate',
+    description: 'Show how the solution addresses the customer’s needs through tailored demonstrations or validation.',
+    skills: ['Tailored Demonstrations', 'Validation Testing', 'Proof-of-Concept'],
   },
   {
     step: '04',
     name: 'DEPLOY',
-    subtitle: 'Enterprise Implementation',
-    description: 'Executing onsite and remote rollouts nationwide, integrating scanning hardware, operating systems, and local networking across institutions.',
-    skills: ['Nationwide Onsite Deployments', 'Windows Diagnostics', 'Integration'],
+    subtitle: 'Deploy',
+    description: 'Configure, integrate, test, and roll out the solution onsite or remotely.',
+    skills: ['System Configuration', 'Hardware/Software Integration', 'Remote & Onsite Rollout'],
   },
   {
     step: '05',
     name: 'ENABLE',
-    subtitle: 'Customer Training & Handoff',
-    description: 'Equipping librarians, facility administrators, and IT staff with practical operational knowledge and technical runbooks to guarantee high adoption.',
-    skills: ['Hands-on Training', 'Technical Documentation', 'Change Management'],
+    subtitle: 'Enable',
+    description: 'Train users and administrators with clear documentation, handoff, and practical guidance.',
+    skills: ['Administrator Training', 'End-User Enablement', 'Documentation & Handoff'],
   },
   {
     step: '06',
     name: 'SUPPORT',
-    subtitle: 'Long-Term Technical Success',
-    description: 'Providing proactive maintenance, root-cause troubleshooting, escalation management, and internal tooling to sustain account health.',
-    skills: ['Root-Cause Analysis', 'Escalation Resolution', 'Internal Tooling'],
+    subtitle: 'Support',
+    description: 'Diagnose issues, manage escalations, provide proactive maintenance, and improve the customer experience over time.',
+    skills: ['Root-Cause Analysis', 'Escalation Management', 'Proactive Maintenance'],
   },
 ];
 
@@ -58,14 +58,14 @@ export default function SolutionLifecycle() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[var(--border-subtle)] mb-12">
           <div>
             <span className="font-mono text-xs font-semibold uppercase tracking-[0.25em] text-[var(--accent)]">
-              03 // HOW I WORK &middot; END-TO-END METHODOLOGY
+              03 // HOW I WORK
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase text-[var(--text-primary)] tracking-tight mt-2 font-display">
-              The Solution Lifecycle.
+              From first conversation to working outcome
             </h2>
           </div>
           <p className="max-w-md text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
-            From initial pre-sales discovery to nationwide deployment and lifetime account support—bridging the gap between engineering and business outcomes.
+            I support the full customer lifecycle—from understanding the problem and demonstrating a solution to implementation, training, troubleshooting, and continued improvement.
           </p>
         </div>
 

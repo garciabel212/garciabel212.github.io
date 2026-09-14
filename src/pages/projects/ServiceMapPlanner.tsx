@@ -19,10 +19,7 @@ const techStack = [
   { name: 'TypeScript', category: 'frontend' as const },
   { name: 'Firebase', category: 'backend' as const },
   { name: 'Firestore', category: 'backend' as const },
-  { name: 'Firebase Auth', category: 'backend' as const },
-  { name: 'Google Maps API', category: 'cloud' as const },
-  { name: 'JavaScript', category: 'frontend' as const },
-  { name: 'Tailwind CSS', category: 'frontend' as const },
+  { name: 'Google Maps', category: 'cloud' as const },
 ];
 
 const features = [
@@ -30,60 +27,53 @@ const features = [
     icon: Database,
     color: '#3B82F6',
     title: 'Institution Database',
-    desc: 'Centralized records for each customer institution — contacts, locations, notes, equipment, and service flags in one place.',
+    desc: 'Centralizes customer accounts, locations, contacts, operational notes, and hardware profiles in a single queryable registry.',
+  },
+  {
+    icon: Wrench,
+    color: '#8B5CF6',
+    title: 'Equipment and Maintenance Tracking',
+    desc: 'Tracks scanner inventory, active software versions, preventive maintenance status, and hardware replacement cycles.',
   },
   {
     icon: Map,
     color: '#06B6D4',
     title: 'Geographic Map View',
-    desc: 'Map-based visualization of all customer locations, color-coded by maintenance status for rapid situational awareness.',
-  },
-  {
-    icon: Wrench,
-    color: '#8B5CF6',
-    title: 'Equipment & Maintenance Tracking',
-    desc: 'Full equipment registry per institution — scanner models, software versions, maintenance status (Active / Expiring / Expired / EOL / Unknown), and replacement planning.',
+    desc: 'Map-based visualization of institutional customer locations with status indicators for rapid situational awareness.',
   },
   {
     icon: Calendar,
     color: '#10B981',
-    title: 'Service Visit Tickets',
-    desc: 'Structured service visit records capturing work performed, issues identified, and next actions — building a complete service history per customer.',
+    title: 'Service Visit History',
+    desc: 'Structured visit records capturing work performed, issues identified, technician notes, and next follow-up actions.',
   },
   {
     icon: BarChart3,
     color: '#F59E0B',
-    title: 'Product Configuration Reporting',
-    desc: 'Reporting on product configurations across the customer base — supporting operational decisions and proactive outreach.',
+    title: 'Travel and Work Planning',
+    desc: 'Consolidates multi-site routing and trip context to streamline nationwide field service logistics and site visits.',
   },
   {
     icon: Bell,
     color: '#EF4444',
-    title: 'Data Quality Alerts',
-    desc: 'Automated flags for missing or inconsistent data — ensuring the customer database stays accurate and actionable.',
+    title: 'Data-Quality Flags',
+    desc: 'Automated flags identifying missing customer fields, unlinked hardware, or overdue service intervals.',
   },
 ];
 
-const screenshots = [
-  { alt: 'Institution Map View', caption: 'Geographic dashboard — customer locations by maintenance status', todo: true },
-  { alt: 'Institution Detail View', caption: 'Full institution profile with equipment, contacts, and history', todo: true },
-  { alt: 'Service Ticket View', caption: 'Service visit record with notes, equipment status, and history', todo: true },
-  { alt: 'Equipment Registry', caption: 'Fleet view with maintenance status and replacement flags', todo: true },
+const whatChangedItems = [
+  'A single operational view of institutions and deployed equipment',
+  'Faster access to service history and customer context',
+  'Clearer visibility into maintenance and replacement planning',
+  'Structured records for follow-up work',
+  'Visible data-quality issues that can be corrected',
 ];
 
-const challenges = [
-  {
-    challenge: 'No centralized system for field-service data',
-    solution: 'Designed a Firestore data model that links institutions, contacts, equipment, and service history — allowing cross-referenced queries for any operational need.',
-  },
-  {
-    challenge: 'Maintenance status was invisible without manually checking each record',
-    solution: 'Built a geographic map view with color-coded status overlays — letting the team immediately see which customers need attention without navigating individual records.',
-  },
-  {
-    challenge: 'Service history lived in email threads and manual logs',
-    solution: 'Created structured service ticket records that persist permanently and are linked to the institution — making historical context immediately accessible.',
-  },
+const futureDevelopmentItems = [
+  'Calendar and travel planning',
+  'Automated maintenance notifications',
+  'Mobile field workflow',
+  'Service analytics and reporting',
 ];
 
 export default function ServiceMapPlanner() {
@@ -95,13 +85,13 @@ export default function ServiceMapPlanner() {
       <HeroReveal>
         {/* Oversized Product Frame — the expanding visual */}
         <ProductFrame
-          title="Enterprise Service Map Operations Dashboard"
-          url="service-map-planner.dlsg.internal"
+          title="Service Map Planner"
+          url="app.internal/servicemap"
           glowColor="blue"
           aspectRatio="aspect-[16/10]"
           badges={[
             { text: '● Multi-Region Account Mapping', position: 'top-left', variant: 'accent', delay: 0.2 },
-            { text: '◎ Maintenance Scheduling', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
+            { text: '◎ Maintenance Tracking', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
             { text: '✓ Centralized Operational Records', position: 'mid-right', variant: 'emerald', delay: 0.6 },
           ]}
         >
@@ -114,7 +104,7 @@ export default function ServiceMapPlanner() {
                   INSTITUTIONAL SERVICE MAP
                 </span>
                 <span className="text-slate-500 hidden sm:inline">|</span>
-                <span className="text-slate-400 hidden sm:inline">Regional Accounts Overview</span>
+                <span className="text-slate-400 hidden sm:inline">Operational Overview</span>
               </div>
               <div className="flex items-center gap-2 text-[11px]">
                 <span className="px-2 py-0.5 rounded bg-white/[0.05] text-slate-200 border border-white/10">
@@ -158,12 +148,12 @@ export default function ServiceMapPlanner() {
 
                 {/* Nodes */}
                 {[
-                  { x: 180, y: 120, label: 'University Library Center', status: 'active', units: 4 },
-                  { x: 320, y: 180, label: 'Regional Research Archives', status: 'active', units: 6 },
-                  { x: 480, y: 240, label: 'Metropolitan Campus', status: 'expiring', units: 3 },
-                  { x: 720, y: 280, label: 'State University Repository', status: 'active', units: 8 },
-                  { x: 480, y: 390, label: 'Public Library Consortium', status: 'active', units: 2 },
-                  { x: 260, y: 290, label: 'Special Collections Center', status: 'warning', units: 5 },
+                  { x: 180, y: 120, label: 'University Library Center', status: 'active' },
+                  { x: 320, y: 180, label: 'Regional Research Archives', status: 'active' },
+                  { x: 480, y: 240, label: 'Metropolitan Campus', status: 'expiring' },
+                  { x: 720, y: 280, label: 'State University Repository', status: 'active' },
+                  { x: 480, y: 390, label: 'Public Library Consortium', status: 'active' },
+                  { x: 260, y: 290, label: 'Special Collections Center', status: 'warning' },
                 ].map((node, i) => (
                   <g key={i}>
                     <circle
@@ -188,7 +178,7 @@ export default function ServiceMapPlanner() {
                       fontSize="11"
                       fontFamily="'JetBrains Mono', monospace"
                     >
-                      {node.label} ({node.units}u)
+                      {node.label}
                     </text>
                   </g>
                 ))}
@@ -199,8 +189,8 @@ export default function ServiceMapPlanner() {
                 <div className="text-slate-400 text-[10px] uppercase tracking-wider">SELECTED RECORD</div>
                 <div className="text-white font-bold mt-0.5">State University Repository</div>
                 <div className="mt-2 text-slate-300 text-[11px] space-y-1">
-                  <div>Hardware: <strong>8x Overhead Scanning Systems</strong></div>
-                  <div>Service Status: <span className="text-emerald-400 font-semibold">Active Maintenance</span></div>
+                  <div>Hardware: <strong>Specialized Scanning Systems</strong></div>
+                  <div>Service Status: <span className="text-emerald-400 font-semibold">Operational</span></div>
                   <div>Routine Check: <span className="text-slate-400">Preventive Inspection Verified</span></div>
                 </div>
               </div>
@@ -208,16 +198,16 @@ export default function ServiceMapPlanner() {
               {/* Bottom metrics banner */}
               <div className="absolute bottom-4 left-4 glass-dark px-4 py-2 rounded-lg border border-white/[0.08] flex items-center gap-4 text-[11px]">
                 <div>
-                  <span className="text-slate-400">Status: </span>
-                  <span className="text-emerald-400 font-bold">128 Up to Date</span>
+                  <span className="text-slate-400">System: </span>
+                  <span className="text-emerald-400 font-bold">Operational</span>
                 </div>
                 <div>
-                  <span className="text-slate-400">Expiring: </span>
-                  <span className="text-amber-400 font-bold">21 Due for PM</span>
+                  <span className="text-slate-400">Maintenance: </span>
+                  <span className="text-amber-400 font-bold">Scheduled</span>
                 </div>
                 <div className="hidden sm:block">
-                  <span className="text-slate-400">Sync: </span>
-                  <span className="text-accent-blue-light font-bold">Firebase Realtime</span>
+                  <span className="text-slate-400">Database: </span>
+                  <span className="text-accent-blue-light font-bold">Firestore Realtime</span>
                 </div>
               </div>
             </div>
@@ -225,27 +215,46 @@ export default function ServiceMapPlanner() {
         </ProductFrame>
       </HeroReveal>
 
+      {/* Hero Meta Banner */}
+      <section className="py-12 border-b border-[var(--border-subtle)]">
+        <div className="section-container">
+          <span className="font-mono text-xs uppercase tracking-widest text-[var(--accent)] font-semibold block mb-2">
+            INTERNAL OPERATIONS PLATFORM
+          </span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black uppercase text-white font-display tracking-tight mb-4">
+            Service Map<br />Planner
+          </h1>
+          <p className="text-lg text-slate-300 max-w-3xl leading-relaxed mb-6">
+            I designed and built Service Map Planner to give a field-service team one operational view of institutions, equipment, maintenance, service history, travel planning, and follow-up work.
+          </p>
+          <div className="flex flex-wrap gap-8 text-sm pt-4 border-t border-white/10 font-mono">
+            <div>
+              <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Role</span>
+              <span className="text-slate-200">Product Design · Workflow Architecture · Frontend Development</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Timeline</span>
+              <span className="text-slate-200">2023 – Present</span>
+            </div>
+            <div>
+              <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Context</span>
+              <span className="text-[var(--accent)]">DLSG / Image Access Internal Tool</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Problem */}
       <section className="section-py bg-navy-800/40">
         <div className="section-container">
           <div className="max-w-3xl">
             <SectionHeader eyebrow="The Problem" title="Why I built it" className="mb-8" />
-            <div className="space-y-4 text-slate-400 text-base leading-relaxed">
+            <div className="space-y-4 text-slate-300 text-base leading-relaxed">
               <p>
-                As the team servicing enterprise customers across institutions nationwide, we were managing
-                customer information, equipment records, maintenance history, and service logistics across
-                fragmented systems — spreadsheets, email threads, and siloed notes. Finding the status of
-                a customer's equipment, their service history, or a contact's information took far too long.
+                Customer information, equipment records, maintenance history, service notes, and travel planning were spread across different workflows. Finding the right context for a service call often required checking multiple sources.
               </p>
               <p>
-                When a service call came in, technicians had no fast way to see what equipment was installed,
-                what software version it was running, or what issues had been reported previously. Maintenance
-                schedules weren't visible without manually cross-referencing records. Travel planning was disconnected from
-                customer locations.
-              </p>
-              <p>
-                I designed and built Service Map Planner to solve this — a purpose-built operations platform
-                that centralizes all of this information into a single, accessible system.
+                The platform was designed to organize that information around the way service work actually happens: institution, equipment, maintenance status, service history, and next action.
               </p>
             </div>
           </div>
@@ -263,7 +272,12 @@ export default function ServiceMapPlanner() {
       {/* Architecture */}
       <section className="section-py bg-navy-800/40" id="architecture">
         <div className="section-container">
-          <SectionHeader eyebrow="Architecture" title="System Design" className="mb-10" />
+          <SectionHeader
+            eyebrow="Architecture"
+            title="System design"
+            description="The application connects structured institutional records with equipment profiles, maintenance status, map-based planning, service history, user access, and operational reporting."
+            className="mb-10"
+          />
           <ServiceMapArchitecture />
         </div>
       </section>
@@ -273,8 +287,7 @@ export default function ServiceMapPlanner() {
         <div className="section-container">
           <SectionHeader
             eyebrow="Core Features"
-            title="What the platform"
-            titleHighlight="does"
+            title="Platform Capabilities"
             className="mb-12"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -304,94 +317,64 @@ export default function ServiceMapPlanner() {
         </div>
       </section>
 
-      {/* Screenshots */}
+      {/* What Changed */}
       <section className="section-py bg-navy-800/40">
-        <div className="section-container">
-          <SectionHeader
-            eyebrow="Screenshots"
-            title="Platform Views"
-            description="Screenshots will be added once the sensitive customer data has been properly redacted."
-            className="mb-10"
-          />
-          <ScreenshotGallery screenshots={screenshots} columns={2} />
-        </div>
-      </section>
-
-      {/* Challenges */}
-      <section className="section-py">
-        <div className="section-container">
-          <SectionHeader eyebrow="Engineering" title="Challenges Solved" className="mb-10" />
-          <div className="space-y-6 max-w-3xl">
-            {challenges.map((c, i) => (
+        <div className="section-container max-w-3xl">
+          <SectionHeader eyebrow="Impact & Outcomes" title="What changed" className="mb-8" />
+          <div className="space-y-4">
+            {whatChangedItems.map((item, idx) => (
               <motion.div
-                key={i}
-                initial={reduceMotion ? false : { opacity: 0, x: -20 }}
+                key={item}
+                initial={reduceMotion ? false : { opacity: 0, x: -16 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="card p-6 border-l-2 border-accent-blue"
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className="p-4 rounded-xl border border-white/10 bg-white/[0.02] flex items-center gap-3.5"
               >
-                <p className="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-2">Challenge</p>
-                <p className="text-white font-medium mb-4">{c.challenge}</p>
-                <p className="text-xs font-semibold tracking-widest uppercase text-accent-blue mb-2">Solution</p>
-                <p className="text-slate-400 text-sm leading-relaxed">{c.solution}</p>
+                <div className="w-2 h-2 rounded-full bg-[var(--accent)] shrink-0" />
+                <span className="text-slate-200 text-sm sm:text-base font-medium">{item}</span>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* What I Learned */}
-      <section className="section-py bg-navy-800/40">
-        <div className="section-container">
-          <div className="max-w-3xl">
-            <SectionHeader eyebrow="Reflection" title="What I Learned" className="mb-8" />
-            <div className="space-y-4 text-slate-400 text-base leading-relaxed">
-              <p>
-                Building an internal tool that people actually depend on daily is a different discipline
-                from building a portfolio project. The data model had to be carefully designed to support
-                real operational queries. The UI had to be fast and reliable. And because the system lives
-                alongside real customer data, data integrity and access control were non-negotiable requirements
-                from day one.
-              </p>
-              <p>
-                This project deepened my understanding of Firebase's real-time data patterns, taught me to
-                think about information architecture from the user's workflow perspective, and reinforced how
-                much product value comes from deeply understanding the operational problem before writing any code.
-              </p>
-            </div>
+          <div className="mt-8 p-4 rounded-xl border border-white/5 bg-white/[0.01] text-xs font-mono text-slate-500">
+            Representative interface using anonymized data. Customer names and sensitive operational information are not shown.
           </div>
         </div>
       </section>
 
-      {/* Future */}
+      {/* Reflection */}
       <section className="section-py">
-        <div className="section-container">
-          <div className="max-w-3xl">
-            <SectionHeader eyebrow="Roadmap" title="Future Development" className="mb-8" />
-            <ul className="space-y-3">
-              {[
-                'Calendar view for scheduling service visits and travel logistics',
-                'Route optimization for multi-site service trips',
-                'Automated maintenance status notifications',
-                'Customer-facing portal for service history visibility',
-                'Analytics dashboard — fleet health and service trends',
-                'Mobile app for field technician use',
-              ].map((item) => (
-                <li key={item} className="flex gap-3 text-slate-400 text-sm">
-                  <span className="text-accent-cyan flex-shrink-0 mt-0.5">›</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="section-container max-w-3xl">
+          <SectionHeader eyebrow="Reflection" title="Operational Perspective" className="mb-8" />
+          <div className="p-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-medium)] text-left">
+            <p className="text-base sm:text-lg text-[var(--text-primary)] font-medium leading-relaxed">
+              Building an internal tool for real operational work reinforced the importance of information architecture, data integrity, access control, and designing around the user’s actual workflow—not just the underlying technology.
+            </p>
           </div>
+        </div>
+      </section>
+
+      {/* Future Development */}
+      <section className="section-py bg-navy-800/40">
+        <div className="section-container max-w-3xl">
+          <SectionHeader eyebrow="Roadmap" title="Future Development" className="mb-8" />
+          <ul className="space-y-3">
+            {futureDevelopmentItems.map((item) => (
+              <li key={item} className="flex gap-3 text-slate-300 text-sm sm:text-base">
+                <span className="text-[var(--accent)] flex-shrink-0 mt-0.5 font-bold">›</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <CTA
         title="Want to talk through the build?"
-        description="Happy to walk through the architecture, engineering decisions, or how this kind of tool fits into an enterprise workflow."
+        description="Happy to walk through the workflow architecture, operational decisions, or how this platform supports field service teams."
       />
     </main>
   );
 }
+

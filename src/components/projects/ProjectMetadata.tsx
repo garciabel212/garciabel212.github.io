@@ -8,6 +8,7 @@ interface ProjectMetadataProps {
   subtitle: string;
   description: string;
   role: string;
+  statusLabel?: string;
   stack: string[];
   caseStudyHref: string;
 }
@@ -19,6 +20,7 @@ export default function ProjectMetadata({
   subtitle,
   description,
   role,
+  statusLabel,
   stack,
   caseStudyHref,
 }: ProjectMetadataProps) {
@@ -27,7 +29,7 @@ export default function ProjectMetadata({
       {/* Top Number & Tag */}
       <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-[var(--text-muted)] mb-3">
         <span className="text-[var(--accent)] font-semibold">{number}</span>
-        <span>// FEATURED SYSTEM</span>
+        <span>// SELECTED WORK</span>
       </div>
 
       {headline && (
@@ -41,7 +43,7 @@ export default function ProjectMetadata({
         {title}
       </h3>
 
-      {/* Subtitle */}
+      {/* Subtitle / Tagline */}
       <p className="font-mono text-xs sm:text-sm text-[var(--text-secondary)] uppercase tracking-wider mb-5">
         {subtitle}
       </p>
@@ -51,8 +53,14 @@ export default function ProjectMetadata({
         {description}
       </p>
 
-      {/* Role & Tech Metadata (Clean Mono Layout) */}
+      {/* Role, Status & Tech Metadata */}
       <div className="py-4 border-y border-[var(--border-subtle)] mb-6 space-y-2">
+        {statusLabel && (
+          <div className="flex items-baseline gap-2 font-mono text-xs">
+            <span className="text-[var(--text-muted)] uppercase tracking-wider min-w-[70px]">STATUS:</span>
+            <span className="text-[var(--accent)] font-semibold">{statusLabel}</span>
+          </div>
+        )}
         <div className="flex items-baseline gap-2 font-mono text-xs">
           <span className="text-[var(--text-muted)] uppercase tracking-wider min-w-[70px]">ROLE:</span>
           <span className="text-[var(--text-primary)] font-medium">{role}</span>

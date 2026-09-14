@@ -1,13 +1,21 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Mail, ExternalLink, Code2, FileDown, MessageSquare } from 'lucide-react';
+import { Mail, ExternalLink, Code2, FileText, MessageSquare, MapPin, Plane, Globe2, Briefcase } from 'lucide-react';
+
+const targetRoles = [
+  'Solutions Engineer',
+  'Sales Engineer',
+  'Technical Consultant',
+  'Implementation Consultant',
+  'Customer Engineer',
+];
 
 const contactMethods = [
   {
     icon: Mail,
-    label: 'Email',
+    label: 'Direct Email',
     value: 'joseabelgarcia99@gmail.com',
     href: 'mailto:joseabelgarcia99@gmail.com',
-    desc: 'Direct email for career & technical inquiries',
+    desc: 'Best for interview scheduling & technical inquiries',
     color: '#3B82F6',
     primary: true,
   },
@@ -16,7 +24,7 @@ const contactMethods = [
     label: 'LinkedIn',
     value: 'jose-abel-garcia',
     href: 'https://www.linkedin.com/in/jose-abel-garcia-a5006616b/',
-    desc: 'Connect professionally',
+    desc: 'Connect professionally & view network recommendations',
     color: '#0A66C2',
     primary: false,
   },
@@ -25,19 +33,18 @@ const contactMethods = [
     label: 'GitHub',
     value: 'garciabel212',
     href: 'https://github.com/garciabel212',
-    desc: 'View codebase repositories',
+    desc: 'View public engineering repositories & prototypes',
     color: '#6B7280',
     primary: false,
   },
   {
-    icon: FileDown,
-    label: 'Résumé',
-    value: 'Download PDF',
-    href: `${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`,
-    desc: 'Current CV for recruiters',
+    icon: FileText,
+    label: 'Résumé on Request',
+    value: 'Request via Email',
+    href: 'mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia',
+    desc: 'Current CV delivered directly with verified credentials',
     color: '#10B981',
     primary: false,
-    download: true,
   },
 ];
 
@@ -59,16 +66,56 @@ export default function Contact() {
                 <MessageSquare size={24} className="text-[var(--accent)]" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black uppercase text-[var(--text-primary)] tracking-tight mb-4 font-display">
-              Let&apos;s Connect
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[var(--accent)] font-semibold mb-3">
+              GET IN TOUCH
+            </p>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase text-[var(--text-primary)] tracking-tight mb-6 font-display">
+              Let’s talk about making technology work.
             </h1>
-            <p className="text-lg sm:text-xl text-[var(--text-secondary)] leading-relaxed mb-4">
-              I&apos;m open to Solutions Engineering, Sales Engineering, and Technical Consulting opportunities.
+            <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed mb-6">
+              I am actively seeking Solutions Engineering, Sales Engineering, Technical Consulting, and
+              Customer Engineering roles. If your team needs someone who can understand customer environments,
+              demonstrate and configure technical solutions, lead deployments, and build the tools that keep
+              operations running smoothly, I would love to connect.
             </p>
-            <p className="text-[var(--text-muted)] text-sm sm:text-base max-w-xl mx-auto">
-              Whether you have a specific role to discuss, a customer engineering problem, or just want to connect — reach out.
-            </p>
+
+            {/* Work style & location chips */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] text-xs text-[var(--text-secondary)]">
+                <MapPin size={13} className="text-[var(--accent)]" />
+                <span>Boca Raton, Florida</span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] text-xs text-[var(--text-secondary)]">
+                <Plane size={13} className="text-[var(--accent)]" />
+                <span>Remote / Hybrid / Up to 40% Travel</span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--surface-elevated)] border border-[var(--border)] text-xs text-[var(--text-secondary)]">
+                <Globe2 size={13} className="text-[var(--accent)]" />
+                <span>Bilingual: English &amp; Spanish</span>
+              </div>
+            </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Target Roles Bar */}
+      <section className="pb-12">
+        <div className="section-container max-w-4xl mx-auto">
+          <div className="card p-6 border-[var(--border)] bg-[var(--surface-elevated)]">
+            <div className="flex items-center gap-2 mb-4 text-xs font-mono uppercase tracking-wider text-[var(--accent)]">
+              <Briefcase size={14} /> Target Roles
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              {targetRoles.map((role) => (
+                <span
+                  key={role}
+                  className="px-3.5 py-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-xs sm:text-sm font-medium text-[var(--text-primary)]"
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -78,9 +125,7 @@ export default function Contact() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {contactMethods.map((method, i) => {
               const Icon = method.icon;
-              const linkProps = method.download
-                ? { download: true }
-                : method.href.startsWith('mailto')
+              const linkProps = method.href.startsWith('mailto')
                 ? {}
                 : { target: '_blank', rel: 'noopener noreferrer' };
 
@@ -107,8 +152,10 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="text-[var(--text-primary)] font-semibold text-sm">{method.label}</p>
-                    <p className="text-xs sm:text-sm font-mono text-[var(--text-secondary)] mt-0.5 break-all">{method.value}</p>
-                    <p className="text-xs text-[var(--text-muted)] mt-1">{method.desc}</p>
+                    <p className="text-xs sm:text-sm font-mono text-[var(--text-secondary)] mt-0.5 break-all font-semibold">
+                      {method.value}
+                    </p>
+                    <p className="text-xs text-[var(--text-muted)] mt-1.5 leading-relaxed">{method.desc}</p>
                   </div>
                 </motion.a>
               );
@@ -117,7 +164,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Résumé Note */}
+      {/* Résumé Request Section */}
       <section className="section-py border-t border-[var(--border-subtle)] bg-[var(--surface)]">
         <div className="section-container max-w-2xl text-center mx-auto">
           <motion.div
@@ -126,19 +173,19 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-2xl font-bold uppercase text-[var(--text-primary)] font-display tracking-tight mb-3">
+            <h2 className="text-2xl sm:text-3xl font-bold uppercase text-[var(--text-primary)] font-display tracking-tight mb-3">
               Looking for a résumé?
             </h2>
-            <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-8">
-              Download a comprehensive PDF version of my résumé highlighting enterprise installations, pre-sales demos, systems engineering, and credentials.
+            <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-8 max-w-lg mx-auto">
+              I provide an up-to-date, comprehensive PDF résumé with full deployment history, technical certifications,
+              and institutional references on request.
             </p>
             <a
-              href={`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`}
-              download
-              className="btn-lime inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm mx-auto"
+              href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia"
+              className="btn-lime inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-sm mx-auto shadow-lg hover:brightness-105 transition-all"
             >
-              <FileDown size={17} />
-              <span>DOWNLOAD RÉSUMÉ PDF</span>
+              <FileText size={17} />
+              <span>REQUEST RÉSUMÉ VIA EMAIL</span>
             </a>
           </motion.div>
         </div>
@@ -146,3 +193,4 @@ export default function Contact() {
     </main>
   );
 }
+

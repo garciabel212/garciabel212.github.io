@@ -13,10 +13,10 @@ export default function Experience() {
       <section className="section-py pb-0">
         <div className="section-container">
           <SectionHeader
-            eyebrow="Professional Experience"
-            title="Where I've"
-            titleHighlight="worked"
-            description="Four years of customer-facing engineering, field service, and solutions delivery — with increasing scope and impact."
+            eyebrow="PROFESSIONAL EXPERIENCE"
+            title="Experience that connects engineering to outcomes"
+            titleHighlight=""
+            description="Four years of hands-on technical work — from telecom infrastructure to enterprise systems deployments, customer training, and internal tooling."
             className="mb-16"
           />
 
@@ -41,10 +41,10 @@ export default function Experience() {
                   transition={{ duration: 0.5 }}
                   className="card p-6"
                 >
-                  <p className="text-[var(--text-primary)] font-bold">{edu.institution}</p>
-                  <p className="text-[var(--accent)] text-sm font-medium mt-0.5">{edu.degree} — {edu.field}</p>
-                  <p className="text-[var(--text-muted)] text-sm mt-1">{edu.period}{edu.gpa ? ` · GPA ${edu.gpa}` : ''}</p>
-                  <ul className="mt-4 space-y-1.5">
+                  <p className="text-[var(--text-primary)] font-bold text-base">{edu.institution}</p>
+                  <p className="text-[var(--accent)] text-sm font-semibold mt-0.5">{edu.degree} in {edu.field}</p>
+                  <p className="text-[var(--text-muted)] text-xs mt-1 font-mono">{edu.period}</p>
+                  <ul className="mt-4 space-y-2">
                     {edu.highlights.map((h) => (
                       <li key={h} className="flex gap-2 text-sm text-[var(--text-secondary)]">
                         <span className="text-[var(--accent)] flex-shrink-0 mt-0.5">&rsaquo;</span>
@@ -61,30 +61,36 @@ export default function Experience() {
               <div className="flex items-center gap-2 mb-6">
                 <Award size={18} className="text-[var(--accent)]" />
                 <h2 className="text-lg font-bold text-[var(--text-primary)] font-display uppercase tracking-wide">
-                  Certifications
+                  Certifications &amp; Credentials
                 </h2>
               </div>
-              {certifications.map((cert) => (
-                <motion.div
-                  key={cert.name}
-                  initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  className="card p-6"
-                >
-                  <p className="text-[var(--text-primary)] font-bold">{cert.name}</p>
-                  <p className="text-[var(--text-secondary)] text-sm mt-0.5">{cert.issuer} · {cert.year}</p>
-                </motion.div>
-              ))}
+              <div className="space-y-4">
+                {certifications.map((cert) => (
+                  <motion.div
+                    key={cert.name}
+                    initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="card p-5"
+                  >
+                    <p className="text-[var(--text-primary)] font-bold text-sm">{cert.name}</p>
+                    <p className="text-[var(--accent)] text-xs font-mono mt-1">{cert.issuer} &middot; {cert.year}</p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <div className="mt-20">
-        <CTA />
+        <CTA
+          title="Let’s discuss how this experience fits your team."
+          description="Available for Solutions Engineering, Sales Engineering, and Technical Consulting roles. Open to remote, hybrid, and up to 40% travel."
+        />
       </div>
     </main>
   );
 }
+

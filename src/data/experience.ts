@@ -26,63 +26,45 @@ export const experience: ExperienceEntry[] = [
     role: 'Service Engineer',
     roleSubtitle: 'Sales Engineering Support',
     period: 'October 2022 – Present',
-    location: 'Boca Raton, FL (National Travel)',
+    location: 'Boca Raton, FL · National Travel',
     type: 'full-time',
     current: true,
     summary:
-      'Customer-facing engineering role spanning the full solutions lifecycle — from pre-sales technical consulting and product demonstrations through enterprise deployment, customer training, and long-term technical support. Work directly with IT teams, administrators, and business stakeholders at institutions nationwide.',
+      'Customer-facing engineering role spanning technical discovery, product demonstrations, solution configuration, nationwide hardware and software deployments, customer training, troubleshooting, and long-term technical support.',
     responsibilities: [
       {
         category: 'Customer & Sales Engineering',
         icon: 'Users',
         items: [
-          'Technical discovery and requirements gathering with customer IT teams and stakeholders',
-          'Product demonstrations and proof-of-concept support for sales opportunities',
-          'Solution configuration and deployment planning',
-          'Support for pre-sales technical presentations and trade show demonstrations',
-          'Cross-functional collaboration between sales, engineering, and customer teams',
+          'Technical discovery, requirements gathering, product demonstrations, solution configuration, technical presentations, and collaboration with sales and engineering teams.',
         ],
       },
       {
-        category: 'Technical Implementation',
+        category: 'Implementation',
         icon: 'Settings',
         items: [
-          'On-site hardware and software installations at customer institutions nationwide',
-          'Remote system deployments and configuration',
-          'Hardware/software integration and validation',
-          'Software licensing and deployment management',
-          'Customer onboarding and solution handoff',
+          'Onsite and remote hardware/software deployments, system configuration, integration, validation, licensing, and customer handoff.',
         ],
       },
       {
-        category: 'Infrastructure & Troubleshooting',
+        category: 'Systems & Troubleshooting',
         icon: 'Network',
         items: [
-          'Network configuration and validation for deployed systems',
-          'Windows system diagnostics and application troubleshooting',
-          'Remote technical support and escalation management',
-          'System diagnostics and root-cause analysis',
-          'Preventive and proactive maintenance programs',
+          'Windows diagnostics, network validation, hardware integration, remote support, root-cause analysis, and escalation management.',
         ],
       },
       {
         category: 'Training & Customer Success',
         icon: 'GraduationCap',
         items: [
-          'Technical training for customer IT staff, administrators, and end users',
-          'Customer onboarding and success documentation',
-          'Multi-site deployment coordination and logistics',
-          'Long-term account support and relationship management',
+          'Administrator and end-user training, documentation, deployment coordination, preventive maintenance, and long-term account support.',
         ],
       },
       {
-        category: 'Product & Development',
+        category: 'Product & Tooling',
         icon: 'Code2',
         items: [
-          'Designed and developed Service Map Planner — internal field-service operations platform',
-          'Product testing and quality validation for new hardware/software releases',
-          'Technical documentation for deployments and support procedures',
-          'Data-quality reporting and operational tooling',
+          'Product testing, quality validation, operational reporting, technical documentation, and development of Service Map Planner.',
         ],
       },
     ],
@@ -97,16 +79,13 @@ export const experience: ExperienceEntry[] = [
     type: 'full-time',
     current: false,
     summary:
-      'NOC engineering role focused on network monitoring, incident response, and infrastructure support for a telecommunications carrier. Developed skills in real-time network diagnostics, escalation management, and system reliability.',
+      'Network operations role focused on carrier infrastructure monitoring, incident response, real-time diagnostics, escalation management, system reliability, and cross-team communication during network events.',
     responsibilities: [
       {
         category: 'Network Operations',
         icon: 'Network',
         items: [
-          'Real-time network monitoring and incident detection across carrier infrastructure',
-          'Incident triage, escalation, and resolution coordination',
-          'System reliability monitoring and alerting',
-          'Cross-team communication during network events',
+          'Carrier infrastructure monitoring, incident response, real-time diagnostics, escalation management, system reliability, and cross-team communication during network events.',
         ],
       },
     ],
@@ -130,11 +109,11 @@ export const education: EducationEntry[] = [
     degree: 'Bachelor of Science',
     field: 'Computer Engineering',
     period: '2018 – 2022',
-    gpa: '3.5',
     highlights: [
-      'Computer Engineering curriculum with focus on hardware/software integration',
-      'Certificate in Data Science & Analytics (May 2022)',
-      'Bilingual: English and Spanish',
+      'Bachelor of Science in Computer Engineering',
+      'Certificate in Data Science & Analytics',
+      'AWS Certified Cloud Practitioner — 2022',
+      'English and Spanish',
     ],
   },
 ];
@@ -150,6 +129,12 @@ export const certifications: CertEntry[] = [
   {
     name: 'AWS Certified Cloud Practitioner',
     issuer: 'Amazon Web Services',
+    year: '2022',
+    relevant: true,
+  },
+  {
+    name: 'Certificate in Data Science & Analytics',
+    issuer: 'Florida Atlantic University',
     year: '2022',
     relevant: true,
   },

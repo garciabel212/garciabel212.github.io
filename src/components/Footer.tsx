@@ -6,6 +6,7 @@ const footerLinks = [
   { label: 'EXPERIENCE', href: '/experience' },
   { label: 'ABOUT', href: '/about' },
   { label: 'CONTACT', href: '/contact' },
+  { label: 'RÉSUMÉ', href: 'mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia' },
 ];
 
 const socialLinks = [

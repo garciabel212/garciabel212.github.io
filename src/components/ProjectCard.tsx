@@ -48,22 +48,22 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
         {/* Status badge */}
         <div className="absolute top-3 left-3">
           <span
-            className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${
-              project.status === 'active'
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+              project.slug === 'enterprise-deployment'
+                ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+                : project.slug === 'service-map-planner'
                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                : project.status === 'in-development'
-                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'
+                : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
             }`}
           >
             <span className="w-1 h-1 rounded-full bg-current" />
-            {project.status === 'active' ? 'Active' : project.status === 'in-development' ? 'In Development' : 'Concept'}
+            {project.statusLabel || (project.status === 'active' ? 'Professional Experience' : 'In Development')}
           </span>
         </div>
 
-        {/* Year */}
-        <div className="absolute bottom-3 right-3 text-xs text-white/40 font-mono">
-          {project.year}
+        {/* Category Tag */}
+        <div className="absolute bottom-3 right-3 text-[11px] text-white/50 font-mono uppercase tracking-wider">
+          {project.category === 'professional' ? 'Customer Engineering' : project.category === 'platform' ? 'Internal Platform' : '3D Product'}
         </div>
       </div>
 
@@ -72,8 +72,8 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
         <div>
           <div className="flex items-start justify-between gap-4 mb-3">
             <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600">
-                Case Study {String(index + 1).padStart(2, '0')}
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                0{index + 1} // {project.statusLabel || (project.status === 'active' ? 'Professional Experience' : 'In Development')}
               </p>
               <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: project.accentColor }}>
                 {project.tagline}
@@ -90,15 +90,15 @@ export default function ProjectCard({ project, index = 0, variant = 'featured' }
         </div>
 
         <div className="space-y-4">
-          {/* Role */}
+          {/* Metadata Grid */}
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="text-xs text-slate-500">
               <span className="mb-1 block font-mono text-[10px] uppercase tracking-widest text-slate-600">Role</span>
-              <span className="text-slate-400 font-medium">{project.role}</span>
+              <span className="text-slate-300 font-medium">{project.role}</span>
             </div>
             <div className="text-xs text-slate-500">
               <span className="mb-1 block font-mono text-[10px] uppercase tracking-widest text-slate-600">Status</span>
-              <span className="capitalize text-slate-400 font-medium">{project.status.replace('-', ' ')}</span>
+              <span className="text-[var(--accent)] font-medium">{project.statusLabel || project.status}</span>
             </div>
           </div>
 

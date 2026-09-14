@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BriefcaseBusiness, Code2, FileDown, Mail, Search, UserRound, X, type LucideIcon } from 'lucide-react';
+import { BriefcaseBusiness, Code2, FileText, Mail, Search, UserRound, X, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motionDurations, motionEase } from '@/components/motion';
 
@@ -40,10 +40,13 @@ export default function CommandPalette({ onClose }: CommandPaletteProps) {
       { label: 'View About', hint: 'Background and approach', icon: UserRound, action: visit('/about') },
       { label: 'Contact Jose', hint: 'Email and professional links', icon: Mail, action: visit('/contact') },
       {
-        label: 'Open Resume',
-        hint: 'View PDF',
-        icon: FileDown,
-        action: openExternal(`${import.meta.env.BASE_URL}Jose-Garcia-Resume.pdf`),
+        label: 'Request Résumé',
+        hint: 'Request CV via email',
+        icon: FileText,
+        action: () => {
+          window.location.href = 'mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia';
+          onClose();
+        },
       },
       { label: 'Open GitHub', hint: 'garciabel212', icon: Code2, action: openExternal('https://github.com/garciabel212') },
       {

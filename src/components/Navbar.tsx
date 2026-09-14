@@ -106,8 +106,8 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
               )}
 
               <a
-                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
-                download
+                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
+                title="Résumé available on request"
                 className="btn-secondary px-3.5 py-1.5 rounded-xl font-mono text-xs font-semibold tracking-wider"
               >
                 R&Eacute;SUM&Eacute;
@@ -158,11 +158,11 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
                 BOCA RATON, FL
               </span>
               <a
-                href={`${baseUrl}Jose-Garcia-Resume.pdf`}
-                download
+                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
+                title="Résumé available on request"
                 className="btn-lime px-4 py-2 rounded-lg font-mono text-xs font-bold"
               >
-                R&Eacute;SUM&Eacute; PDF
+                R&Eacute;SUM&Eacute; ON REQUEST
               </a>
             </div>
           </motion.div>
