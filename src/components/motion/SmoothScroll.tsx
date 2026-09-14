@@ -1,11 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
+
+// ─── Shared Lenis context ────────────────────────────────────────────────────
+export const LenisContext = createContext<Lenis | null>(null);
+
+/** Access the shared Lenis instance from any component. */
+export function useLenis(): Lenis | null {
+  return useContext(LenisContext);
+}
 
 interface SmoothScrollProps {
   children: React.ReactNode;
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
+  const [lenis, setLenis] = useState<Lenis | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
@@ -15,7 +24,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     if (prefersReducedMotion) return;
 
     // Initialize Lenis with subtle, refined smoothing
-    const lenis = new Lenis({
+    const lenisInstance = new Lenis({
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential out
       orientation: 'vertical',
@@ -25,12 +34,13 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       touchMultiplier: 1.5,
     });
 
-    lenisRef.current = lenis;
+    lenisRef.current = lenisInstance;
+    setLenis(lenisInstance);
 
     // Connect requestAnimationFrame loop
     let rafId: number;
     function raf(time: number) {
-      lenis.raf(time);
+      lenisInstance.raf(time);
       rafId = requestAnimationFrame(raf);
     }
     rafId = requestAnimationFrame(raf);
@@ -46,7 +56,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         const targetElement = document.querySelector(href);
         if (targetElement instanceof HTMLElement) {
           e.preventDefault();
-          lenis.scrollTo(targetElement, { offset: -30 });
+          lenisInstance.scrollTo(targetElement, { offset: -30 });
         }
       }
     };
@@ -56,10 +66,15 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     return () => {
       cancelAnimationFrame(rafId);
       document.removeEventListener('click', handleAnchorClick);
-      lenis.destroy();
+      lenisInstance.destroy();
       lenisRef.current = null;
+      setLenis(null);
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <LenisContext.Provider value={lenis}>
+      {children}
+    </LenisContext.Provider>
+  );
 }

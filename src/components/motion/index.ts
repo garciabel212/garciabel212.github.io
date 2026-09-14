@@ -3,4 +3,4 @@ export { default as Reveal } from './Reveal';
 export { default as ScrollProgress } from './ScrollProgress';
 export { AnimatedNavIndicator, AnimatedSection, BlurReveal, FadeUp, HoverLift, Stagger } from './Primitives';
 export { motionDurations, motionEase, motionTransition } from './tokens';
-
+export { LenisContext, useLenis } from './SmoothScroll';

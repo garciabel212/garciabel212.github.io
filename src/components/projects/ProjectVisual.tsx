@@ -1,12 +1,17 @@
-import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion, useSpring, useMotionValue } from 'framer-motion';
+import { Lock, Activity, Box, Compass, Layers, CheckCircle2 } from 'lucide-react';
+import { useDeviceOrientation } from '../../hooks/useDeviceOrientation';
+
+export type ProjectVisualVariant = 'application' | 'product' | 'default' | 'extended';
 
 interface ProjectVisualProps {
   imageSrc: string;
   altText: string;
   caption?: string;
   badge?: string;
-  variant?: 'default' | 'extended';
+  variant?: ProjectVisualVariant;
+  stats?: { label: string; value: string }[];
 }
 
 export default function ProjectVisual({
@@ -15,10 +20,36 @@ export default function ProjectVisual({
   caption,
   badge,
   variant = 'default',
+  stats,
 }: ProjectVisualProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
-  const [hoverOffset, setHoverOffset] = useState({ x: 0, y: 0 });
+
+  // Mobile Device Orientation Hook
+  const { tiltX: gyroTiltX, tiltY: gyroTiltY, isMobile } = useDeviceOrientation();
+
+  // Mouse / gyro tilt tracking with spring physics
+  const rawTiltX = useMotionValue(0);
+  const rawTiltY = useMotionValue(0);
+  const [lightX, setLightX] = useState(50);
+  const [lightY, setLightY] = useState(50);
+
+  const tiltX = useSpring(rawTiltX, { stiffness: 220, damping: 26, mass: 0.6 });
+  const tiltY = useSpring(rawTiltY, { stiffness: 220, damping: 26, mass: 0.6 });
+
+  // Update tilt & specular glare from physical phone gyroscope
+  useEffect(() => {
+    if (reduceMotion) return;
+    if (isMobile && (Math.abs(gyroTiltX) > 0.01 || Math.abs(gyroTiltY) > 0.01)) {
+      // Tilt card up to +/- 3 degrees based on phone orientation
+      rawTiltX.set(gyroTiltX * 3);
+      rawTiltY.set(-gyroTiltY * 3);
+
+      // Shift dynamic light across the glass surface
+      setLightX(50 + gyroTiltX * 40);
+      setLightY(50 + gyroTiltY * 40);
+    }
+  }, [gyroTiltX, gyroTiltY, isMobile, reduceMotion, rawTiltX, rawTiltY]);
 
   // Scroll perspective animation
   const { scrollYProgress } = useScroll({
@@ -26,79 +57,245 @@ export default function ProjectVisual({
     offset: ['start end', 'end start'],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.4, 0.8], [0.93, 1, 0.98]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.4], [3, 0]);
-  const translateY = useTransform(scrollYProgress, [0, 0.4], [50, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.25], [0.7, 1]);
+  const scrollScale = useTransform(scrollYProgress, [0, 0.35, 0.75], [0.94, 1, 0.98]);
+  const scrollTranslateY = useTransform(scrollYProgress, [0, 0.35], [40, 0]);
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.2], [0.75, 1]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduceMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    // Bounded to 3 degrees max
-    setHoverOffset({ x: x * 3.5, y: -y * 3.5 });
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+
+    // Max tilt +/- 2.5 degrees
+    rawTiltX.set((px - 0.5) * 3);
+    rawTiltY.set(-(py - 0.5) * 3);
+
+    setLightX(px * 100);
+    setLightY(py * 100);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (reduceMotion || e.touches.length !== 1) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0];
+    const px = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+    const py = Math.max(0, Math.min(1, (touch.clientY - rect.top) / rect.height));
+
+    rawTiltX.set((px - 0.5) * 3.5);
+    rawTiltY.set(-(py - 0.5) * 3.5);
+
+    setLightX(px * 100);
+    setLightY(py * 100);
   };
 
   const handleMouseLeave = () => {
-    setHoverOffset({ x: 0, y: 0 });
+    if (!isMobile) {
+      rawTiltX.set(0);
+      rawTiltY.set(0);
+      setLightX(50);
+      setLightY(50);
+    }
   };
+
+  const isApp = variant === 'application';
+  const isProduct = variant === 'product' || variant === 'extended';
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${variant === 'extended' ? 'lg:-mr-12' : ''}`}
-      style={{ perspective: 1200 }}
+      className={`relative w-full ${isProduct ? 'lg:-mr-6' : ''}`}
+      style={{ perspective: 1400 }}
     >
+      {/* Visual backdrop / architectural pedestal for Product Variant */}
+      {isProduct && (
+        <div
+          className="absolute -inset-2 sm:-inset-4 rounded-3xl bg-[var(--surface-highlight)]/40 border border-[var(--border-subtle)] -z-10 translate-y-2 sm:translate-y-3 blur-xs hidden sm:block"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Background offset plate for Application Variant */}
+      {isApp && (
+        <div
+          className="absolute -inset-2 sm:-inset-5 rounded-3xl bg-gradient-to-br from-[var(--surface)]/80 via-transparent to-[var(--bg-secondary)] border border-[var(--border-subtle)] -z-10 translate-x-1 sm:translate-x-2 translate-y-1 sm:translate-y-2 hidden sm:block"
+          aria-hidden="true"
+        />
+      )}
+
       <motion.div
         style={
           reduceMotion
             ? {}
             : {
-                scale,
-                rotateX,
-                translateY,
-                opacity,
-                rotateY: hoverOffset.x,
+                scale: scrollScale,
+                translateY: scrollTranslateY,
+                opacity: scrollOpacity,
+                rotateX: tiltY,
+                rotateY: tiltX,
               }
         }
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="group relative rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-2.5 sm:p-3.5 shadow-[var(--shadow-floating)] transition-all duration-300"
+        onTouchMove={handleTouchMove}
+        className={`group relative rounded-2xl sm:rounded-3xl border border-[var(--border)] bg-[var(--surface)] transition-shadow duration-500 overflow-hidden ${
+          isProduct
+            ? 'p-2 sm:p-4 shadow-[var(--shadow-high)]'
+            : 'p-2 sm:p-4 shadow-[var(--shadow-floating)]'
+        }`}
       >
-        {/* Layered Window Header Bar */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--border-subtle)] mb-2.5">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--border-strong)]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--border)]" />
-            <span className="w-2.5 h-2.5 rounded-full bg-[var(--border)]" />
-          </div>
-          <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
-            {badge || 'SYSTEM VIEW // 1080P'}
-          </span>
-        </div>
+        {/* Dynamic ambient specular reflection on hover & phone tilt */}
+        <div
+          className="pointer-events-none absolute inset-0 transition-opacity duration-300 opacity-60 sm:opacity-0 sm:group-hover:opacity-100 z-20"
+          style={{
+            background: `radial-gradient(circle 380px at ${lightX}% ${lightY}%, rgba(255,255,255,0.18), transparent 70%)`,
+          }}
+          aria-hidden="true"
+        />
 
-        {/* Screenshot Image Frame */}
-        <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border)]">
+        {/* ─── CHROME HEADER: Tailored per Variant ─── */}
+        {isApp ? (
+          /* Application Browser / OS Chrome */
+          <div className="flex items-center justify-between px-2.5 sm:px-4 py-2 sm:py-2.5 border-b border-[var(--border-subtle)] mb-2 sm:mb-3 bg-[var(--bg-secondary)]/50 rounded-t-xl">
+            {/* Window control dots */}
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FF5F56]/80" />
+              <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#FFBD2E]/80" />
+              <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#27C93F]/80" />
+            </div>
+
+            {/* Simulated secure URL bar */}
+            <div className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-[var(--surface)] border border-[var(--border-subtle)] text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)] tracking-wider">
+              <Lock size={10} className="text-[var(--accent)]" />
+              <span className="truncate max-w-[140px] sm:max-w-none">servicemap.internal/ops</span>
+            </div>
+
+            {/* Right Live Beacon */}
+            <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[9px] sm:text-[10px] uppercase text-[var(--text-muted)] tracking-widest">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
+              </span>
+              <span className="font-semibold text-[var(--text-primary)]">SYS ACTIVE</span>
+            </div>
+          </div>
+        ) : isProduct ? (
+          /* 3D CAD / Viewport Tool HUD */
+          <div className="flex items-center justify-between px-2.5 sm:px-4 py-2 sm:py-2.5 border-b border-[var(--border-subtle)] mb-2 sm:mb-3 bg-[var(--bg-secondary)]/40 rounded-t-xl">
+            <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[9px] sm:text-[10px] text-[var(--text-muted)] uppercase tracking-wider">
+              <Box size={12} className="text-[var(--accent)]" />
+              <span className="font-semibold text-[var(--text-primary)]">3D VIEWPORT // ORBIT</span>
+            </div>
+
+            {/* Viewport tool indicators */}
+            <div className="flex items-center gap-2 sm:gap-3 font-mono text-[9px] sm:text-[10px] text-[var(--text-muted)]">
+              <span className="inline-flex items-center gap-1">
+                <Compass size={10} /> 1:18
+              </span>
+              <span className="px-1.5 sm:px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--accent-text)] font-semibold text-[9px]">
+                R3F
+              </span>
+            </div>
+          </div>
+        ) : (
+          /* Default minimal header */
+          <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--border-subtle)] mb-2.5">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[var(--border-strong)]" />
+              <span className="w-2 h-2 rounded-full bg-[var(--border)]" />
+              <span className="w-2 h-2 rounded-full bg-[var(--border)]" />
+            </div>
+            <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
+              {badge || 'SYSTEM VIEW // 1080P'}
+            </span>
+          </div>
+        )}
+
+        {/* ─── MAIN IMAGE FRAME ─── */}
+        <div className={`relative w-full rounded-xl sm:rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border)] ${
+          isProduct ? 'aspect-[16/11]' : 'aspect-[16/10]'
+        }`}>
           <img
             src={imageSrc}
             alt={altText}
             loading="lazy"
-            className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015]"
+            className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]"
           />
 
-          {/* Subtle reflection overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)]/30 via-transparent to-white/[0.04] pointer-events-none" />
+          {/* Subtle directional glare / glass reflection overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.14) 100%)',
+            }}
+          />
+
+          {/* Floating UI Widget for Application: Live Ops Telemetry Chip */}
+          {isApp && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="absolute bottom-2.5 left-2.5 sm:bottom-4 sm:left-4 z-10 flex items-center gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] shadow-[var(--shadow-medium)] text-[9px] sm:text-[11px] font-mono"
+            >
+              <Activity size={12} className="text-[var(--accent)] animate-pulse" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-[var(--text-primary)] font-semibold">14 Fleets</span>
+                <span className="text-[var(--border-strong)]">&middot;</span>
+                <span className="text-[var(--text-muted)]">99.8% SLA</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Floating UI Widget for Product: Material Specimen & R3F Pill */}
+          {isProduct && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="absolute bottom-2.5 right-2.5 sm:bottom-4 sm:right-4 z-10 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-[var(--surface)]/95 backdrop-blur-md border border-[var(--border)] shadow-[var(--shadow-medium)] text-[9px] sm:text-[11px] font-mono"
+            >
+              <Layers size={12} className="text-[var(--accent)]" />
+              <span className="text-[var(--text-primary)] font-semibold">DIE-CAST</span>
+              <span className="text-[var(--border-strong)]">&middot;</span>
+              <span className="text-[var(--accent)] font-medium">1:18 SPEC</span>
+            </motion.div>
+          )}
         </div>
 
-        {/* Bottom Status / Caption */}
-        {caption && (
-          <div className="flex items-center justify-between px-3 pt-2.5 text-[11px] font-mono text-[var(--text-muted)]">
-            <span>{caption}</span>
-            <span className="text-[var(--accent)] font-medium">LIVE INTERFACE</span>
-          </div>
-        )}
+        {/* ─── BOTTOM METRICS & CAPTION BAR ─── */}
+        <div className="flex flex-wrap items-center justify-between px-2 sm:px-4 pt-2.5 sm:pt-3 gap-2 text-[10px] sm:text-[11px] font-mono text-[var(--text-muted)]">
+          {caption && (
+            <span className="text-[var(--text-secondary)] font-medium truncate max-w-[200px] sm:max-w-none">{caption}</span>
+          )}
+          {stats && stats.length > 0 ? (
+            <div className="flex items-center gap-2 sm:gap-3">
+              {stats.map((s) => (
+                <span key={s.label} className="flex items-center gap-1">
+                  <CheckCircle2 size={10} className="text-[var(--accent)]" />
+                  <span className="text-[var(--text-primary)] font-semibold">{s.value}</span>
+                  <span>{s.label}</span>
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="text-[var(--accent)] font-semibold tracking-wider flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+              {isProduct ? 'HYBRID ARCHITECTURE' : 'MISSION CRITICAL'}
+            </span>
+          )}
+        </div>
       </motion.div>
+
+      {/* Pedestal Ground Contact Shadow for Product variant */}
+      {isProduct && (
+        <div
+          className="mx-auto mt-2 h-3 sm:h-4 w-[85%] rounded-[100%] bg-black/15 blur-md pointer-events-none"
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 }

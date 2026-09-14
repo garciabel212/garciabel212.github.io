@@ -1,22 +1,23 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useTheme } from '../theme/ThemeProvider';
+import { getGlobalDeviceTilt } from '../../hooks/useDeviceOrientation';
 
 interface CoreMeshProps {
   isDark: boolean;
   reducedMotion: boolean;
+  touchDragOffset: { x: number; y: number };
 }
 
-function CoreObject({ isDark, reducedMotion }: CoreMeshProps) {
+function CoreObject({ isDark, reducedMotion, touchDragOffset }: CoreMeshProps) {
   const groupRef = useRef<THREE.Group>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
   const coreRef = useRef<THREE.Mesh>(null);
 
-  // Mouse lerp coordinates
-  const mouse = useRef({ x: 0, y: 0 });
+  // Mouse / gyro lerp coordinates
+  const currentRot = useRef({ x: 0, y: 0 });
 
   // Node positions on a sphere
   const nodes = useMemo(() => {
@@ -41,20 +42,31 @@ function CoreObject({ isDark, reducedMotion }: CoreMeshProps) {
     if (!groupRef.current) return;
 
     if (!reducedMotion) {
-      // Very subtle idle rotation
+      // Idle ambient rotation
       groupRef.current.rotation.y += delta * 0.15;
       if (outerRingRef.current) outerRingRef.current.rotation.z += delta * 0.2;
       if (innerRingRef.current) innerRingRef.current.rotation.x += delta * 0.15;
       if (coreRef.current) coreRef.current.rotation.y -= delta * 0.1;
 
-      // Pointer interactive tilt (bounded to max ~4 degrees)
-      const targetRotX = state.pointer.y * 0.08;
-      const targetRotZ = -state.pointer.x * 0.08;
-      mouse.current.x += (targetRotX - mouse.current.x) * 0.05;
-      mouse.current.y += (targetRotZ - mouse.current.y) * 0.05;
+      // Phone gyroscope tilt (physics response when tilting device)
+      const gyro = getGlobalDeviceTilt();
+      const hasGyro = Math.abs(gyro.x) > 0.01 || Math.abs(gyro.y) > 0.01;
 
-      groupRef.current.rotation.x = mouse.current.x;
-      groupRef.current.rotation.z = mouse.current.y;
+      // Pointer + Gyroscope + Touch Drag integration
+      const targetRotX =
+        state.pointer.y * 0.08 +
+        (hasGyro ? gyro.y * 0.35 : 0) +
+        touchDragOffset.y * 0.005;
+      const targetRotZ =
+        -state.pointer.x * 0.08 +
+        (hasGyro ? -gyro.x * 0.35 : 0) +
+        touchDragOffset.x * 0.005;
+
+      currentRot.current.x += (targetRotX - currentRot.current.x) * 0.08;
+      currentRot.current.y += (targetRotZ - currentRot.current.y) * 0.08;
+
+      groupRef.current.rotation.x = currentRot.current.x;
+      groupRef.current.rotation.z = currentRot.current.y;
     }
   });
 
@@ -132,31 +144,6 @@ function CoreObject({ isDark, reducedMotion }: CoreMeshProps) {
           </line>
         </group>
       ))}
-
-      {/* Engineering Annotations in 3D Space */}
-      <Html position={[2.2, 0.6, 0]} center distanceFactor={8} zIndexRange={[10, 0]}>
-        <div className="select-none pointer-events-none whitespace-nowrap font-mono text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2.5 py-1 rounded border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm">
-          <span className="text-[var(--accent)] font-semibold mr-1.5">01 //</span>PRE-SALES
-        </div>
-      </Html>
-
-      <Html position={[-2.1, -0.8, 0.4]} center distanceFactor={8} zIndexRange={[10, 0]}>
-        <div className="select-none pointer-events-none whitespace-nowrap font-mono text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2.5 py-1 rounded border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm">
-          <span className="text-[var(--accent)] font-semibold mr-1.5">02 //</span>SYSTEM DESIGN
-        </div>
-      </Html>
-
-      <Html position={[0.4, 2.1, -0.4]} center distanceFactor={8} zIndexRange={[10, 0]}>
-        <div className="select-none pointer-events-none whitespace-nowrap font-mono text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2.5 py-1 rounded border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm">
-          <span className="text-[var(--accent)] font-semibold mr-1.5">03 //</span>FIELD ENGINEERING
-        </div>
-      </Html>
-
-      <Html position={[-0.5, -2.1, -0.5]} center distanceFactor={8} zIndexRange={[10, 0]}>
-        <div className="select-none pointer-events-none whitespace-nowrap font-mono text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2.5 py-1 rounded border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm">
-          <span className="text-[var(--accent)] font-semibold mr-1.5">04 //</span>DEPLOYMENT &amp; SUCCESS
-        </div>
-      </Html>
     </group>
   );
 }
@@ -171,8 +158,58 @@ export default function SystemsCoreScene() {
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
 
+  // Touch drag support for mobile interaction
+  const [touchDrag, setTouchDrag] = useState({ x: 0, y: 0 });
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartRef.current || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.touches[0].clientY - touchStartRef.current.y;
+    setTouchDrag({ x: deltaX, y: deltaY });
+  };
+
+  const handleTouchEnd = () => {
+    touchStartRef.current = null;
+    // Smooth reset
+    setTouchDrag({ x: 0, y: 0 });
+  };
+
   return (
-    <div className="relative w-full aspect-square max-w-[580px] mx-auto select-none" aria-hidden="true">
+    <div
+      className="relative w-full aspect-square max-w-[340px] xs:max-w-[400px] sm:max-w-[480px] lg:max-w-[540px] mx-auto select-none touch-pan-y"
+      aria-hidden="true"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* HUD Telemetry Badges in Fixed Positions around 3D Scene - Mobile Optimized */}
+      <div className="absolute top-2 sm:top-6 right-1 sm:right-6 z-20 font-mono text-[9px] sm:text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm pointer-events-none">
+        <span className="text-[var(--accent)] font-semibold mr-1">01 //</span>PRE-SALES
+      </div>
+
+      <div className="absolute bottom-3 sm:bottom-8 right-1 sm:right-4 z-20 font-mono text-[9px] sm:text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm pointer-events-none">
+        <span className="text-[var(--accent)] font-semibold mr-1">02 //</span>SYSTEM DESIGN
+      </div>
+
+      <div className="absolute bottom-2 sm:bottom-6 left-1 sm:left-4 z-20 font-mono text-[9px] sm:text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm pointer-events-none">
+        <span className="text-[var(--accent)] font-semibold mr-1">03 //</span>
+        <span className="hidden sm:inline">FIELD ENGINEERING</span>
+        <span className="sm:hidden">FIELD ENG</span>
+      </div>
+
+      <div className="absolute top-3 sm:top-8 left-1 sm:left-6 z-20 font-mono text-[9px] sm:text-[10px] tracking-wider text-[var(--text-secondary)] bg-[var(--surface)]/90 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-[var(--border)] shadow-[var(--shadow-low)] backdrop-blur-sm pointer-events-none">
+        <span className="text-[var(--accent)] font-semibold mr-1">04 //</span>
+        <span className="hidden sm:inline">DEPLOYMENT &amp; SUCCESS</span>
+        <span className="sm:hidden">DEPLOYMENT</span>
+      </div>
+
       <Canvas
         camera={{ position: [0, 0, 5.2], fov: 45 }}
         dpr={[1, 1.5]}
@@ -192,7 +229,11 @@ export default function SystemsCoreScene() {
         />
         <pointLight position={[0, 0, 3]} intensity={0.5} color={isDark ? '#D4F435' : '#ffffff'} />
 
-        <CoreObject isDark={isDark} reducedMotion={reducedMotion} />
+        <CoreObject
+          isDark={isDark}
+          reducedMotion={reducedMotion}
+          touchDragOffset={touchDrag}
+        />
       </Canvas>
     </div>
   );

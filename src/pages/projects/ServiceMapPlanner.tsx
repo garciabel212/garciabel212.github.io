@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Database, Map, Calendar, Wrench, BarChart3, Bell } from 'lucide-react';
+import { Database, Map, Calendar, Wrench, BarChart3, Bell } from 'lucide-react';
 import SectionHeader from '@/components/SectionHeader';
 import TechStack from '@/components/TechStack';
 import ServiceMapArchitecture from '@/components/ServiceMapArchitecture';
@@ -10,6 +9,7 @@ import ProjectPreview from '@/components/ProjectPreview';
 import { ProductFrame } from '@/components/ProductFrame';
 import { projects } from '@/data/projects';
 import { motionDurations, motionEase } from '@/components/motion';
+import HeroReveal from '@/components/projects/HeroReveal';
 
 const project = projects.find((item) => item.slug === 'service-map-planner');
 
@@ -91,191 +91,139 @@ export default function ServiceMapPlanner() {
 
   return (
     <main className="pt-20">
-      {/* Hero */}
-      <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: 'linear-gradient(135deg, #050A14 0%, #0A1428 100%)' }}>
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{ backgroundImage: 'radial-gradient(circle, #94A3B8 1px, transparent 1px)', backgroundSize: '28px 28px' }}
-        />
-        <div
-          className="hero-orb w-[500px] h-[500px] -top-20 right-0 opacity-10"
-          style={{ background: 'radial-gradient(circle, #2563EB 0%, transparent 70%)' }}
-        />
-
-        <div className="section-container relative z-10">
-          <motion.div initial={reduceMotion ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Link to="/projects" className="btn-ghost text-sm mb-8 inline-flex">
-              <ArrowLeft size={15} /> Back to Projects
-            </Link>
-
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <span className="tag">Platform</span>
-              <span className="tag">Internal Tool</span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">
-                <span className="w-1 h-1 rounded-full bg-emerald-400" /> Active
-              </span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-3 leading-tight">
-              Service Map Planner
-            </h1>
-            <p className="text-xl text-accent-blue-light font-medium mb-6">Field-Service Operations Platform</p>
-            <p className="text-lg text-slate-400 leading-relaxed max-w-2xl mb-8">
-              An internal operations platform I designed and built to centralize customer institution data,
-              equipment tracking, maintenance scheduling, service history, and technician workflows — giving
-              the entire service team a single source of truth.
-            </p>
-
-            <div className="flex flex-wrap gap-6 text-sm">
-              <div>
-                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Role</span>
-                <span className="text-white font-medium">Designer &amp; Developer</span>
+      {/* ── Hero — Codrops scroll-expand reveal ── */}
+      <HeroReveal>
+        {/* Oversized Product Frame — the expanding visual */}
+        <ProductFrame
+          title="Enterprise Service Map Operations Dashboard"
+          url="service-map-planner.dlsg.internal"
+          glowColor="blue"
+          aspectRatio="aspect-[16/10]"
+          badges={[
+            { text: '● Multi-Region Account Mapping', position: 'top-left', variant: 'accent', delay: 0.2 },
+            { text: '◎ Maintenance Scheduling', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
+            { text: '✓ Centralized Operational Records', position: 'mid-right', variant: 'emerald', delay: 0.6 },
+          ]}
+        >
+          <div className="relative w-full h-full bg-[#0c1010] flex flex-col font-mono select-none">
+            {/* Dashboard Toolbar */}
+            <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.08] bg-[#111616] text-xs">
+              <div className="flex items-center gap-3">
+                <span className="text-white font-semibold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  INSTITUTIONAL SERVICE MAP
+                </span>
+                <span className="text-slate-500 hidden sm:inline">|</span>
+                <span className="text-slate-400 hidden sm:inline">Regional Accounts Overview</span>
               </div>
-              <div>
-                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Timeline</span>
-                <span className="text-white font-medium">2023 – Present</span>
-              </div>
-              <div>
-                <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Context</span>
-                <span className="text-white font-medium">DLSG / Image Access</span>
+              <div className="flex items-center gap-2 text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-white/[0.05] text-slate-200 border border-white/10">
+                  MAP VIEW
+                </span>
+                <span className="px-2 py-0.5 rounded bg-white/[0.02] text-slate-400">
+                  EQUIPMENT
+                </span>
               </div>
             </div>
-          </motion.div>
 
-          {/* Oversized Product Frame */}
-          <div className="mt-14 max-w-5xl">
-            <ProductFrame
-              title="Enterprise Service Map Operations Dashboard"
-              url="service-map-planner.dlsg.internal"
-              glowColor="blue"
-              aspectRatio="aspect-[16/10]"
-              badges={[
-                { text: '● Multi-Region Account Mapping', position: 'top-left', variant: 'accent', delay: 0.2 },
-                { text: '◎ Maintenance Scheduling', position: 'bottom-right', variant: 'cyan', delay: 0.4 },
-                { text: '✓ Centralized Operational Records', position: 'mid-right', variant: 'emerald', delay: 0.6 },
-              ]}
-            >
-              <div className="relative w-full h-full bg-[#0c1010] flex flex-col font-mono select-none">
-                {/* Dashboard Toolbar */}
-                <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.08] bg-[#111616] text-xs">
-                  <div className="flex items-center gap-3">
-                    <span className="text-white font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                      INSTITUTIONAL SERVICE MAP
-                    </span>
-                    <span className="text-slate-500 hidden sm:inline">|</span>
-                    <span className="text-slate-400 hidden sm:inline">Regional Accounts Overview</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[11px]">
-                    <span className="px-2 py-0.5 rounded bg-white/[0.05] text-slate-200 border border-white/10">
-                      MAP VIEW
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-white/[0.02] text-slate-400">
-                      EQUIPMENT
-                    </span>
-                  </div>
-                </div>
+            {/* Map stage */}
+            <div className="relative flex-1 bg-[#070909] overflow-hidden">
+              <svg className="absolute inset-0 w-full h-full opacity-20">
+                <defs>
+                  <pattern id="smpGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+                    <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#2563EB" strokeWidth="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#smpGrid)" />
+              </svg>
 
-                {/* Map stage */}
-                <div className="relative flex-1 bg-[#070909] overflow-hidden">
-                  <svg className="absolute inset-0 w-full h-full opacity-20">
-                    <defs>
-                      <pattern id="smpGrid" width="28" height="28" patternUnits="userSpaceOnUse">
-                        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#2563EB" strokeWidth="0.5"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#smpGrid)" />
-                  </svg>
+              {/* Route Paths */}
+              <svg className="absolute inset-0 w-full h-full">
+                <path
+                  d="M 180 120 Q 320 180 480 240 T 720 280"
+                  fill="none"
+                  stroke="#3B82F6"
+                  strokeWidth="2"
+                  strokeDasharray="6 4"
+                  className="opacity-70"
+                />
+                <path
+                  d="M 320 180 Q 420 320 480 390"
+                  fill="none"
+                  stroke="#06B6D4"
+                  strokeWidth="2"
+                  strokeDasharray="6 4"
+                  className="opacity-60"
+                />
 
-                  {/* Route Paths */}
-                  <svg className="absolute inset-0 w-full h-full">
-                    <path
-                      d="M 180 120 Q 320 180 480 240 T 720 280"
-                      fill="none"
-                      stroke="#3B82F6"
-                      strokeWidth="2"
-                      strokeDasharray="6 4"
-                      className="opacity-70"
+                {/* Nodes */}
+                {[
+                  { x: 180, y: 120, label: 'University Library Center', status: 'active', units: 4 },
+                  { x: 320, y: 180, label: 'Regional Research Archives', status: 'active', units: 6 },
+                  { x: 480, y: 240, label: 'Metropolitan Campus', status: 'expiring', units: 3 },
+                  { x: 720, y: 280, label: 'State University Repository', status: 'active', units: 8 },
+                  { x: 480, y: 390, label: 'Public Library Consortium', status: 'active', units: 2 },
+                  { x: 260, y: 290, label: 'Special Collections Center', status: 'warning', units: 5 },
+                ].map((node, i) => (
+                  <g key={i}>
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={node.status === 'expiring' ? 7 : 6}
+                      fill={node.status === 'expiring' ? '#F59E0B' : '#3B82F6'}
+                      className="transition-all hover:scale-125"
                     />
-                    <path
-                      d="M 320 180 Q 420 320 480 390"
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={12}
                       fill="none"
-                      stroke="#06B6D4"
-                      strokeWidth="2"
-                      strokeDasharray="6 4"
-                      className="opacity-60"
+                      stroke={node.status === 'expiring' ? 'rgba(245,158,11,0.4)' : 'rgba(59,130,246,0.4)'}
+                      strokeWidth="1"
                     />
+                    <text
+                      x={node.x + 12}
+                      y={node.y + 4}
+                      fill="#E2E8F0"
+                      fontSize="11"
+                      fontFamily="'JetBrains Mono', monospace"
+                    >
+                      {node.label} ({node.units}u)
+                    </text>
+                  </g>
+                ))}
+              </svg>
 
-                    {/* Nodes */}
-                    {[
-                      { x: 180, y: 120, label: 'University Library Center', status: 'active', units: 4 },
-                      { x: 320, y: 180, label: 'Regional Research Archives', status: 'active', units: 6 },
-                      { x: 480, y: 240, label: 'Metropolitan Campus', status: 'expiring', units: 3 },
-                      { x: 720, y: 280, label: 'State University Repository', status: 'active', units: 8 },
-                      { x: 480, y: 390, label: 'Public Library Consortium', status: 'active', units: 2 },
-                      { x: 260, y: 290, label: 'Special Collections Center', status: 'warning', units: 5 },
-                    ].map((node, i) => (
-                      <g key={i}>
-                        <circle
-                          cx={node.x}
-                          cy={node.y}
-                          r={node.status === 'expiring' ? 7 : 6}
-                          fill={node.status === 'expiring' ? '#F59E0B' : '#3B82F6'}
-                          className="transition-all hover:scale-125"
-                        />
-                        <circle
-                          cx={node.x}
-                          cy={node.y}
-                          r={12}
-                          fill="none"
-                          stroke={node.status === 'expiring' ? 'rgba(245,158,11,0.4)' : 'rgba(59,130,246,0.4)'}
-                          strokeWidth="1"
-                        />
-                        <text
-                          x={node.x + 12}
-                          y={node.y + 4}
-                          fill="#E2E8F0"
-                          fontSize="11"
-                          fontFamily="'JetBrains Mono', monospace"
-                        >
-                          {node.label} ({node.units}u)
-                        </text>
-                      </g>
-                    ))}
-                  </svg>
-
-                  {/* Floating selected details card */}
-                  <div className="absolute top-4 right-4 bg-[#111616] p-3.5 rounded-xl border border-white/10 max-w-xs text-xs shadow-float">
-                    <div className="text-slate-400 text-[10px] uppercase tracking-wider">SELECTED RECORD</div>
-                    <div className="text-white font-bold mt-0.5">State University Repository</div>
-                    <div className="mt-2 text-slate-300 text-[11px] space-y-1">
-                      <div>Hardware: <strong>8x Overhead Scanning Systems</strong></div>
-                      <div>Service Status: <span className="text-emerald-400 font-semibold">Active Maintenance</span></div>
-                      <div>Routine Check: <span className="text-slate-400">Preventive Inspection Verified</span></div>
-                    </div>
-                  </div>
-
-                  {/* Bottom metrics banner */}
-                  <div className="absolute bottom-4 left-4 glass-dark px-4 py-2 rounded-lg border border-white/[0.08] flex items-center gap-4 text-[11px]">
-                    <div>
-                      <span className="text-slate-400">Status: </span>
-                      <span className="text-emerald-400 font-bold">128 Up to Date</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Expiring: </span>
-                      <span className="text-amber-400 font-bold">21 Due for PM</span>
-                    </div>
-                    <div className="hidden sm:block">
-                      <span className="text-slate-400">Sync: </span>
-                      <span className="text-accent-blue-light font-bold">Firebase Realtime</span>
-                    </div>
-                  </div>
+              {/* Floating selected details card */}
+              <div className="absolute top-4 right-4 bg-[#111616] p-3.5 rounded-xl border border-white/10 max-w-xs text-xs shadow-float">
+                <div className="text-slate-400 text-[10px] uppercase tracking-wider">SELECTED RECORD</div>
+                <div className="text-white font-bold mt-0.5">State University Repository</div>
+                <div className="mt-2 text-slate-300 text-[11px] space-y-1">
+                  <div>Hardware: <strong>8x Overhead Scanning Systems</strong></div>
+                  <div>Service Status: <span className="text-emerald-400 font-semibold">Active Maintenance</span></div>
+                  <div>Routine Check: <span className="text-slate-400">Preventive Inspection Verified</span></div>
                 </div>
               </div>
-            </ProductFrame>
+
+              {/* Bottom metrics banner */}
+              <div className="absolute bottom-4 left-4 glass-dark px-4 py-2 rounded-lg border border-white/[0.08] flex items-center gap-4 text-[11px]">
+                <div>
+                  <span className="text-slate-400">Status: </span>
+                  <span className="text-emerald-400 font-bold">128 Up to Date</span>
+                </div>
+                <div>
+                  <span className="text-slate-400">Expiring: </span>
+                  <span className="text-amber-400 font-bold">21 Due for PM</span>
+                </div>
+                <div className="hidden sm:block">
+                  <span className="text-slate-400">Sync: </span>
+                  <span className="text-accent-blue-light font-bold">Firebase Realtime</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </ProductFrame>
+      </HeroReveal>
 
       {/* Problem */}
       <section className="section-py bg-navy-800/40">

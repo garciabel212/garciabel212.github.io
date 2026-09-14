@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useDeviceOrientation } from '../../hooks/useDeviceOrientation';
 
 export default function Atmosphere() {
   const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
+  const { tiltX, tiltY, isMobile } = useDeviceOrientation();
 
+  // Desktop pointer spotlight
   useEffect(() => {
-    // Only track pointer spotlight on desktop with fine pointers
     if (typeof window === 'undefined') return;
     const isFinePointer = window.matchMedia('(pointer: fine)').matches;
     if (!isFinePointer) return;
@@ -16,6 +18,16 @@ export default function Atmosphere() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Compute active spotlight position (mouse on desktop, phone tilt on mobile)
+  const activeSpotlight = isMobile
+    ? typeof window !== 'undefined'
+      ? {
+          x: window.innerWidth * 0.5 + tiltX * (window.innerWidth * 0.35),
+          y: window.innerHeight * 0.45 + tiltY * (window.innerHeight * 0.35),
+        }
+      : null
+    : mousePos;
 
   return (
     <div
@@ -39,21 +51,21 @@ export default function Atmosphere() {
 
       {/* 3. Subtle Radial Illumination at Header / Center */}
       <div
-        className="absolute -top-[20vw] left-1/2 -translate-x-1/2 w-[80vw] h-[50vw] rounded-full blur-[140px] opacity-60"
+        className="absolute -top-[20vw] left-1/2 -translate-x-1/2 w-[90vw] sm:w-[80vw] h-[60vw] sm:h-[50vw] rounded-full blur-[140px] opacity-60"
         style={{
           background: 'radial-gradient(ellipse at center, var(--spotlight-color), transparent 70%)',
         }}
       />
 
-      {/* 4. Desktop-Only Smooth Pointer Spotlight */}
-      {mousePos && (
+      {/* 4. Interactive Spotlight: Pointer on Desktop / Gyroscope on Mobile */}
+      {activeSpotlight && (
         <div
-          className="absolute w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-opacity duration-500"
+          className="absolute w-[360px] sm:w-[600px] h-[360px] sm:h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-[left,top] duration-300 ease-out"
           style={{
-            left: `${mousePos.x}px`,
-            top: `${mousePos.y}px`,
+            left: `${activeSpotlight.x}px`,
+            top: `${activeSpotlight.y}px`,
             background: 'radial-gradient(circle at center, var(--spotlight-color) 0%, transparent 65%)',
-            opacity: 0.85,
+            opacity: isMobile ? 0.75 : 0.85,
           }}
         />
       )}
