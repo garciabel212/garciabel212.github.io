@@ -75,6 +75,20 @@ export default function ProjectVisual({
     setLightY(py * 100);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (reduceMotion || e.touches.length !== 1) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0];
+    const px = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+    const py = Math.max(0, Math.min(1, (touch.clientY - rect.top) / rect.height));
+
+    rawTiltX.set((px - 0.5) * 4);
+    rawTiltY.set(-(py - 0.5) * 4);
+
+    setLightX(px * 100);
+    setLightY(py * 100);
+  };
+
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (reduceMotion || e.touches.length !== 1) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -82,11 +96,18 @@ export default function ProjectVisual({
     const px = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
     const py = Math.max(0, Math.min(1, (touch.clientY - rect.top) / rect.height));
 
-    rawTiltX.set((px - 0.5) * 3.5);
-    rawTiltY.set(-(py - 0.5) * 3.5);
+    rawTiltX.set((px - 0.5) * 4);
+    rawTiltY.set(-(py - 0.5) * 4);
 
     setLightX(px * 100);
     setLightY(py * 100);
+  };
+
+  const handleTouchEnd = () => {
+    rawTiltX.set(0);
+    rawTiltY.set(0);
+    setLightX(50);
+    setLightY(50);
   };
 
   const handleMouseLeave = () => {
@@ -137,7 +158,10 @@ export default function ProjectVisual({
         }
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
         className={`group relative rounded-2xl sm:rounded-3xl border border-[var(--border)] bg-[var(--surface)] transition-shadow duration-500 overflow-hidden ${
           isProduct
             ? 'p-2 sm:p-4 shadow-[var(--shadow-high)]'

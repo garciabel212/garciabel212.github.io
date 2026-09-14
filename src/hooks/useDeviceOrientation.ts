@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useReducedMotion } from 'framer-motion';
 
 export interface DeviceOrientationState {
@@ -6,6 +6,7 @@ export interface DeviceOrientationState {
   tiltY: number; // -1 to 1 (top to bottom)
   isSupported: boolean;
   hasPermission: boolean;
+  needsPermission: boolean;
   isMobile: boolean;
   requestPermission: () => Promise<boolean>;
 }
@@ -24,47 +25,25 @@ function notifyListeners(x: number, y: number) {
   listeners.forEach((fn) => fn(x, y));
 }
 
+function handleOrientationEvent(e: DeviceOrientationEvent) {
+  if (e.gamma === null || e.beta === null) return;
+
+  // gamma: left-to-right roll (-90 to 90 deg) -> normalize around +/- 25 deg
+  const gamma = Math.max(-30, Math.min(30, e.gamma));
+  const normX = gamma / 30;
+
+  // beta: front-to-back pitch (-180 to 180 deg) -> comfortable phone viewing angle is ~45 deg
+  const beta = Math.max(15, Math.min(75, e.beta));
+  const normY = (beta - 45) / 30;
+
+  notifyListeners(normX, normY);
+}
+
 function startGlobalOrientationListener() {
   if (typeof window === 'undefined' || isListening) return;
 
-  const handleOrientation = (e: DeviceOrientationEvent) => {
-    if (e.gamma === null || e.beta === null) return;
-
-    // gamma: left to right (-90 to 90 deg) -> normalize around +/- 25 deg
-    const gamma = Math.max(-25, Math.min(25, e.gamma));
-    const normX = gamma / 25;
-
-    // beta: front to back (-180 to 180 deg) -> comfortable phone viewing angle is ~45 deg
-    const beta = Math.max(15, Math.min(75, e.beta));
-    const normY = (beta - 45) / 30;
-
-    notifyListeners(normX, normY);
-  };
-
-  // Modern browsers (Android / standard)
-  window.addEventListener('deviceorientation', handleOrientation, { passive: true });
+  window.addEventListener('deviceorientation', handleOrientationEvent, { passive: true });
   isListening = true;
-
-  // iOS 13+ requires permission on touch
-  const handleFirstTouch = async () => {
-    const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
-      requestPermission?: () => Promise<'granted' | 'denied'>;
-    };
-
-    if (typeof DeviceOrientation?.requestPermission === 'function') {
-      try {
-        const res = await DeviceOrientation.requestPermission();
-        if (res === 'granted') {
-          globalHasPermission = true;
-          window.addEventListener('deviceorientation', handleOrientation, { passive: true });
-        }
-      } catch {
-        // user cancelled or blocked
-      }
-    }
-  };
-
-  window.addEventListener('touchstart', handleFirstTouch, { once: true, passive: true });
 }
 
 export function useDeviceOrientation(): DeviceOrientationState {
@@ -73,6 +52,7 @@ export function useDeviceOrientation(): DeviceOrientationState {
   const [isSupported, setIsSupported] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [hasPermission, setHasPermission] = useState(globalHasPermission);
+  const [needsPermission, setNeedsPermission] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -86,9 +66,23 @@ export function useDeviceOrientation(): DeviceOrientationState {
     const supported = 'DeviceOrientationEvent' in window;
     setIsSupported(supported);
 
+    const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
+      requestPermission?: () => Promise<'granted' | 'denied'>;
+    };
+
+    const requiresExplicitPermission = typeof DeviceOrientation?.requestPermission === 'function';
+    setNeedsPermission(requiresExplicitPermission && !globalHasPermission);
+
     if (reduceMotion || !supported) return;
 
-    startGlobalOrientationListener();
+    if (!requiresExplicitPermission) {
+      // Android and standard browsers do not require prompt
+      globalHasPermission = true;
+      setHasPermission(true);
+      startGlobalOrientationListener();
+    } else if (globalHasPermission) {
+      startGlobalOrientationListener();
+    }
 
     const listener: OrientationListener = (x, y) => {
       setTilt({ x, y });
@@ -101,6 +95,8 @@ export function useDeviceOrientation(): DeviceOrientationState {
   }, [reduceMotion]);
 
   const requestPermission = useCallback(async () => {
+    if (typeof window === 'undefined') return false;
+
     const DeviceOrientation = window.DeviceOrientationEvent as unknown as {
       requestPermission?: () => Promise<'granted' | 'denied'>;
     };
@@ -109,15 +105,24 @@ export function useDeviceOrientation(): DeviceOrientationState {
       try {
         const res = await DeviceOrientation.requestPermission();
         if (res === 'granted') {
-          setHasPermission(true);
           globalHasPermission = true;
+          setHasPermission(true);
+          setNeedsPermission(false);
+          startGlobalOrientationListener();
           return true;
         }
-      } catch {
+      } catch (err) {
+        console.warn('DeviceOrientation permission request failed:', err);
         return false;
       }
+    } else {
+      globalHasPermission = true;
+      setHasPermission(true);
+      setNeedsPermission(false);
+      startGlobalOrientationListener();
+      return true;
     }
-    return true;
+    return false;
   }, []);
 
   return {
@@ -125,6 +130,7 @@ export function useDeviceOrientation(): DeviceOrientationState {
     tiltY: tilt.y,
     isSupported,
     hasPermission,
+    needsPermission,
     isMobile,
     requestPermission,
   };
