@@ -4,6 +4,7 @@ import MethodologySection from '@/components/home/MethodologySection';
 import CareerTimeline from '@/components/home/CareerTimeline';
 import AboutSection from '@/components/home/AboutSection';
 import HomeContactCta from '@/components/home/HomeContactCta';
+import QuickActionBar from '@/components/mobile/QuickActionBar';
 
 export default function Home() {
   return (
@@ -25,6 +26,9 @@ export default function Home() {
 
       {/* 06. CONTACT — Streamlined Conversion Panel */}
       <HomeContactCta />
+
+      {/* MOBILE ONLY — Sticky Quick-Action Bar (slides in after hero scroll) */}
+      <QuickActionBar />
     </main>
   );
 }

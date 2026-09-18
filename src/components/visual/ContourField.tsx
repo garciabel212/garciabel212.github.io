@@ -14,6 +14,13 @@ interface Point {
   y: number;
 }
 
+interface BurstRipple {
+  x: number;
+  y: number;
+  startTime: number;
+  duration: number; // ms
+}
+
 export default function ContourField({
   className = '',
   section = 'hero',
@@ -52,6 +59,16 @@ export default function ContourField({
       influenceRadius: 280,
     };
 
+    // Secondary touch point for multi-touch
+    const pointer2 = {
+      x: -9999,
+      y: -9999,
+      active: false,
+    };
+
+    // Burst ripples created on tap/touchstart
+    const burstRipples: BurstRipple[] = [];
+
     const resize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -89,6 +106,46 @@ export default function ContourField({
     window.addEventListener('mousemove', onPointerMove, { passive: true });
     document.addEventListener('mouseleave', onPointerLeave);
 
+    // ── Mobile touch handlers ──────────────────────────────────────────────
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      pointer.targetX = t.clientX;
+      pointer.targetY = t.clientY;
+      pointer.targetActive = true;
+      // Second touch point
+      if (e.touches.length >= 2) {
+        pointer2.x = e.touches[1].clientX;
+        pointer2.y = e.touches[1].clientY;
+        pointer2.active = true;
+      } else {
+        pointer2.active = false;
+        pointer2.x = -9999;
+        pointer2.y = -9999;
+      }
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      // Create burst ripple at each new touch point
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        burstRipples.push({
+          x: e.changedTouches[i].clientX,
+          y: e.changedTouches[i].clientY,
+          startTime: performance.now(),
+          duration: 600,
+        });
+      }
+    };
+
+    const onTouchEnd = () => {
+      pointer2.active = false;
+      pointer2.x = -9999;
+      pointer2.y = -9999;
+    };
+
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+
     // Section-specific profiles
     const getSectionOpacity = () => {
       switch (section) {
@@ -120,9 +177,18 @@ export default function ContourField({
 
       const isMobile = width < 768;
       const baseOpacity = getSectionOpacity();
-      const lineCount = isMobile ? 12 : 24;
-      const pointsPerLine = isMobile ? 32 : 64;
-      const displacementMax = isMobile ? 0 : 26;
+      const lineCount = isMobile ? 14 : 24;
+      const pointsPerLine = isMobile ? 36 : 64;
+      // Touch interaction needs displacement on mobile too
+      const displacementMax = isMobile ? 20 : 26;
+
+      // Prune expired burst ripples
+      const now = performance.now();
+      for (let i = burstRipples.length - 1; i >= 0; i--) {
+        if (now - burstRipples[i].startTime > burstRipples[i].duration) {
+          burstRipples.splice(i, 1);
+        }
+      }
 
       // Portrait obstacle avoidance bounds (if provided in Hero)
       let portraitBox: { x: number; y: number; width: number; height: number; cx: number; cy: number; radius: number } | null = null;
@@ -168,7 +234,7 @@ export default function ContourField({
 
           py += harmonic1 + harmonic2 + terrainDrift;
 
-          // 1. Pointer radial displacement & illumination
+          // 1. Primary pointer/touch radial displacement & illumination
           const dx = px - pointer.x;
           const dy = py - pointer.y;
           const distToPointer = Math.hypot(dx, dy);
@@ -184,6 +250,44 @@ export default function ContourField({
               const safeDist = Math.max(distToPointer, 1);
               px += (dx / safeDist) * push * 0.35;
               py += (dy / safeDist) * push;
+            }
+          }
+
+          // 1b. Secondary touch point influence (multi-touch)
+          if (pointer2.active) {
+            const dx2 = px - pointer2.x;
+            const dy2 = py - pointer2.y;
+            const dist2 = Math.hypot(dx2, dy2);
+            const r2 = pointer.influenceRadius * 0.75;
+            if (dist2 < r2) {
+              const f2 = Math.pow(1 - dist2 / r2, 1.8);
+              illumination = Math.max(illumination, f2 * 0.8);
+              maxIlluminationOnLine = Math.max(maxIlluminationOnLine, f2 * 0.8);
+              if (displacementMax > 0) {
+                const push = f2 * displacementMax * 0.8;
+                const safeDist = Math.max(dist2, 1);
+                px += (dx2 / safeDist) * push * 0.35;
+                py += (dy2 / safeDist) * push;
+              }
+            }
+          }
+
+          // 1c. Burst ripple displacement (tap impact)
+          for (const ripple of burstRipples) {
+            const age = (performance.now() - ripple.startTime) / ripple.duration; // 0→1
+            const rippleRadius = pointer.influenceRadius * (0.3 + age * 1.4); // expands outward
+            const rippleFade = Math.pow(1 - age, 1.5); // fades as it expands
+            const dxr = px - ripple.x;
+            const dyr = py - ripple.y;
+            const ringWidth = rippleRadius * 0.18;
+            const distFromCenter = Math.hypot(dxr, dyr);
+            const distFromRing = Math.abs(distFromCenter - rippleRadius);
+            if (distFromRing < ringWidth) {
+              const ringFactor = (1 - distFromRing / ringWidth) * rippleFade;
+              illumination = Math.max(illumination, ringFactor * 0.6);
+              maxIlluminationOnLine = Math.max(maxIlluminationOnLine, ringFactor * 0.6);
+              const safeDist = Math.max(distFromCenter, 1);
+              py += (dyr / safeDist) * ringFactor * 12;
             }
           }
 
@@ -306,6 +410,9 @@ export default function ContourField({
       window.removeEventListener('mousemove', onPointerMove);
       document.removeEventListener('mouseleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
     };
   }, [section, project, resolvedTheme, intensity, portraitRef]);
 

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+﻿import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { CheckCircle2, ArrowRight, Activity } from 'lucide-react';
+import { CheckCircle2, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
@@ -41,7 +41,7 @@ const stages: Stage[] = [
     name: 'DEMONSTRATE',
     subtitle: 'Tailored Demonstrations & Proof of Concept',
     description:
-      'Deliver tailored, interactive technical demonstrations that directly validate the customer’s high-value workflows, proving capability and building executive credibility.',
+      "Deliver tailored, interactive technical demonstrations that directly validate the customer's high-value workflows, proving capability and building executive credibility.",
     deliverables: ['Custom Proof of Concept', 'Live Technical Demo Sessions', 'RFP Technical Validations'],
     impactMetric: 'Converts technical skepticism into executive conviction',
   },
@@ -67,6 +67,138 @@ const stages: Stage[] = [
   },
 ];
 
+// â”€â”€â”€ Mobile Swipe Carousel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function MobileCarousel({ activeIdx, setActiveIdx }: { activeIdx: number; setActiveIdx: (i: number) => void }) {
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const currentStage = stages[activeIdx];
+
+  const goTo = (idx: number) => {
+    const clamped = Math.max(0, Math.min(stages.length - 1, idx));
+    setActiveIdx(clamped);
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Carousel header with nav arrows */}
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-2">
+          <span className="w-6 h-6 rounded-full bg-[var(--accent)] text-white font-mono text-[10px] font-bold flex items-center justify-center">
+            {currentStage.step}
+          </span>
+          <span className="font-mono text-sm font-bold text-[var(--accent)] tracking-wider uppercase">
+            {currentStage.name}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Previous stage"
+            onClick={() => goTo(activeIdx - 1)}
+            disabled={activeIdx === 0}
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-[var(--border)] text-[var(--text-muted)] disabled:opacity-30 hover:border-[var(--accent)] hover:text-[var(--accent)] active:scale-90 transition-all duration-200"
+          >
+            <ChevronLeft size={15} />
+          </button>
+          <button
+            type="button"
+            aria-label="Next stage"
+            onClick={() => goTo(activeIdx + 1)}
+            disabled={activeIdx === stages.length - 1}
+            className="w-8 h-8 rounded-full flex items-center justify-center border border-[var(--border)] text-[var(--text-muted)] disabled:opacity-30 hover:border-[var(--accent)] hover:text-[var(--accent)] active:scale-90 transition-all duration-200"
+          >
+            <ChevronRight size={15} />
+          </button>
+        </div>
+      </div>
+
+      {/* Slide area â€” overflow hidden for peek effect */}
+      <div className="relative overflow-hidden" ref={constraintsRef}>
+        <motion.div
+          className="flex"
+          animate={{ x: `${-activeIdx * 100}%` }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 0.38, ease: EASE_EXPO }}
+          drag={reduceMotion ? false : 'x'}
+          dragConstraints={constraintsRef}
+          dragElastic={0.12}
+          onDragEnd={(_, info) => {
+            const threshold = 60;
+            if (info.offset.x < -threshold) goTo(activeIdx + 1);
+            else if (info.offset.x > threshold) goTo(activeIdx - 1);
+          }}
+        >
+          {stages.map((st) => (
+            <div
+              key={st.id}
+              className="min-w-full px-1 select-none"
+              aria-hidden={st.id !== currentStage.id}
+            >
+              <div className="p-5 rounded-2xl border border-[var(--accent)] bg-[var(--surface)] shadow-[var(--shadow-medium)]">
+                {/* Subtitle */}
+                <p className="text-[10px] font-mono text-[var(--text-muted)] mb-3 tracking-wider uppercase">
+                  {st.subtitle}
+                </p>
+
+                {/* Description */}
+                <p className="text-sm text-[var(--text-primary)] leading-relaxed mb-4 font-serif">
+                  {st.description}
+                </p>
+
+                {/* Impact metric */}
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-[var(--accent)] font-semibold mb-4">
+                  <Activity size={12} />
+                  <span>IMPACT: {st.impactMetric}</span>
+                </div>
+
+                {/* Deliverables */}
+                <div className="space-y-1.5 pt-3 border-t border-[var(--border-subtle)]">
+                  {st.deliverables.map((d) => (
+                    <div key={d} className="flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
+                      <CheckCircle2 size={12} className="text-[var(--accent)] shrink-0" />
+                      <span>{d}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Progress Dots */}
+      <div className="flex justify-center gap-2 pt-1" role="tablist" aria-label="Pipeline stages">
+        {stages.map((st, idx) => (
+          <button
+            key={st.id}
+            type="button"
+            role="tab"
+            aria-selected={idx === activeIdx}
+            aria-label={`Go to stage ${st.step}: ${st.name}`}
+            onClick={() => goTo(idx)}
+            className={`transition-all duration-300 rounded-full ${
+              idx === activeIdx
+                ? 'w-6 h-2 bg-[var(--accent)]'
+                : 'w-2 h-2 bg-[var(--border)] hover:bg-[var(--border-strong)]'
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Swipe hint (only shows on first render, fades after 3s) */}
+      <motion.p
+        initial={{ opacity: 0.6 }}
+        animate={{ opacity: 0 }}
+        transition={{ delay: 2.5, duration: 1 }}
+        className="text-center text-[10px] font-mono text-[var(--text-muted)] tracking-widest uppercase pointer-events-none"
+        aria-hidden
+      >
+        â† Swipe to explore â†’
+      </motion.p>
+    </div>
+  );
+}
+
+// â”€â”€â”€ Main Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function MethodologySection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const reduceMotion = useReducedMotion();
@@ -96,7 +228,7 @@ export default function MethodologySection() {
           </p>
         </div>
 
-        {/* ─── DESKTOP CONNECTED SYSTEMS FLOW (≥ 1024px) ─── */}
+        {/* â”€â”€â”€ DESKTOP CONNECTED SYSTEMS FLOW (â‰¥ 1024px) â”€â”€â”€ */}
         <div className="hidden lg:block mb-8">
           
           {/* Signal Pipeline Bar */}
@@ -218,49 +350,13 @@ export default function MethodologySection() {
 
         </div>
 
-        {/* ─── MOBILE VERTICAL TIMELINE FLOW (< 1024px) ─── */}
-        <div className="lg:hidden space-y-4">
-          {stages.map((st, idx) => (
-            <div
-              key={st.id}
-              onClick={() => setActiveIdx(idx)}
-              className={`p-5 rounded-2xl border transition-all duration-300 ${
-                activeIdx === idx
-                  ? 'bg-[var(--surface)] border-[var(--accent)] shadow-[var(--shadow-medium)]'
-                  : 'bg-[var(--surface)] border-[var(--border)] opacity-90'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-6 h-6 rounded-full bg-[var(--accent)] text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                    {st.step}
-                  </span>
-                  <h3 className="font-mono text-sm font-bold text-[var(--text-primary)] tracking-wider uppercase">
-                    {st.name}
-                  </h3>
-                </div>
-                <span className="text-[10px] font-mono text-[var(--accent)] font-semibold">
-                  {st.subtitle}
-                </span>
-              </div>
-
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed mb-4 font-serif">
-                {st.description}
-              </p>
-
-              <div className="space-y-1.5 pt-3 border-t border-[var(--border-subtle)]">
-                {st.deliverables.map((d) => (
-                  <div key={d} className="flex items-center gap-2 text-[11px] text-[var(--text-muted)]">
-                    <CheckCircle2 size={12} className="text-[var(--accent)] shrink-0" />
-                    <span>{d}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        {/* â”€â”€â”€ MOBILE SWIPE CAROUSEL (< 1024px) â”€â”€â”€ */}
+        <div className="lg:hidden">
+          <MobileCarousel activeIdx={activeIdx} setActiveIdx={setActiveIdx} />
         </div>
 
       </div>
     </section>
   );
 }
+
