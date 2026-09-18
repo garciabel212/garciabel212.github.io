@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Atmosphere from '@/components/background/Atmosphere';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import SmoothScroll from '@/components/motion/SmoothScroll';
+import SmoothScroll, { useLenis } from '@/components/motion/SmoothScroll';
 import { PageTransition, ScrollProgress } from '@/components/motion';
 import Home from '@/pages/Home';
 
@@ -33,16 +33,21 @@ function Loadable({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   const location = useLocation();
+  const lenis = useLenis();
 
   useEffect(() => {
     if (location.hash) {
-      const targetId = location.hash.replace('#', '');
+      const targetId = decodeURIComponent(location.hash.slice(1));
       let attempts = 0;
       let retryTimer: ReturnType<typeof setTimeout> | undefined;
       const scrollToTarget = () => {
         const target = document.getElementById(targetId);
         if (target) {
-          target.scrollIntoView();
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -72 });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
           return;
         }
         attempts += 1;
@@ -51,8 +56,9 @@ function AppRoutes() {
       scrollToTarget();
       return () => clearTimeout(retryTimer);
     }
+    lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [location.pathname, location.hash]);
+  }, [lenis, location.pathname, location.hash]);
 
   return (
     <AnimatePresence mode="sync" initial={false}>
@@ -132,7 +138,7 @@ export default function App() {
       <SmoothScroll>
         <HashRouter>
           <MotionConfig reducedMotion="user">
-            <div className="site-shell min-h-screen flex flex-col relative">
+            <div className="site-shell isolate min-h-screen flex flex-col relative">
               {/* Global Editorial Atmosphere Background */}
               <Atmosphere />
 

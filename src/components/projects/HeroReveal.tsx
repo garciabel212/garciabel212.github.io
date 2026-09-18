@@ -59,20 +59,6 @@ export default function HeroReveal({ children }: HeroRevealProps) {
       // Sync GSAP ScrollTrigger with Lenis if available
       if (lenis) {
         lenis.on('scroll', ScrollTrigger.update);
-        ScrollTrigger.scrollerProxy(document.documentElement, {
-          scrollTop() {
-            return lenis.scroll;
-          },
-          getBoundingClientRect() {
-            return {
-              top: 0,
-              left: 0,
-              width: window.innerWidth,
-              height: window.innerHeight,
-            };
-          },
-          fixedMarkers: true,
-        });
       }
 
       // Initial state: visual is clipped narrow, rows are at rest
@@ -91,7 +77,6 @@ export default function HeroReveal({ children }: HeroRevealProps) {
           scrub: 1.2,
           pin: true,
           anticipatePin: 1,
-          onRefresh: () => ScrollTrigger.refresh(),
         },
       });
 
@@ -129,11 +114,13 @@ export default function HeroReveal({ children }: HeroRevealProps) {
         0.3,
       );
 
-      // Cleanup: also unproxy lenis on unmount
+      // Refresh once after the timeline is complete; never refresh from onRefresh.
+      const refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+
       return () => {
+        window.cancelAnimationFrame(refreshFrame);
         if (lenis) {
           lenis.off('scroll', ScrollTrigger.update);
-          ScrollTrigger.clearScrollMemory();
         }
       };
     },
@@ -149,12 +136,12 @@ export default function HeroReveal({ children }: HeroRevealProps) {
   // ─── Shared meta row (back link + tags) ─────────────────────────────────
   const MetaRow = () => (
     <BlurReveal className="mb-8 flex flex-wrap items-center gap-4">
-      <Link to="/projects" className="btn-ghost text-sm inline-flex items-center gap-2">
+      <Link to="/projects" className="text-sm text-white/80 hover:text-white transition-colors inline-flex items-center gap-2">
         <ArrowLeft size={15} /> Back to Projects
       </Link>
       <div className="flex flex-wrap items-center gap-2">
-        <span className="tag">Platform</span>
-        <span className="tag">Internal Tool</span>
+        <span className="rounded-md border border-white/15 bg-white/5 px-2 py-1 text-xs text-white/75">Platform</span>
+        <span className="rounded-md border border-white/15 bg-white/5 px-2 py-1 text-xs text-white/75">Internal Tool</span>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400">
           <span className="h-1 w-1 rounded-full bg-emerald-400" />
           Active
@@ -283,7 +270,7 @@ export default function HeroReveal({ children }: HeroRevealProps) {
             distance={56}
             duration={0.75}
             viewportMargin="-120px"
-            className="block text-[clamp(3rem,8vw,7rem)] font-black uppercase leading-[0.9] tracking-tight"
+            className="block text-[clamp(3rem,8vw,7rem)] font-black uppercase leading-[0.9] tracking-tight text-white"
           />
         </div>
 

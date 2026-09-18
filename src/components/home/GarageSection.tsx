@@ -52,6 +52,7 @@ export default function GarageSection() {
     <section
       id="garage-studio"
       className="section-py border-t border-[var(--border)] relative scroll-mt-20"
+      data-contour-section="garage"
     >
       <div className="section-container">
         

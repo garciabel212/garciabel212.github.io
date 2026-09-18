@@ -7,7 +7,8 @@ export default function HomeContactCta() {
   return (
     <section
       id="contact"
-      className="section-py border-t border-[var(--border)] relative scroll-mt-20 bg-[var(--surface-warm)]"
+      className="section-py border-t border-[var(--border)] relative scroll-mt-20 bg-[var(--surface-warm-translucent)]"
+      data-contour-section="contact"
     >
       <div className="section-container relative z-10 text-left">
         

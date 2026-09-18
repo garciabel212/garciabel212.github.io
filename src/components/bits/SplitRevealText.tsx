@@ -71,7 +71,7 @@ export default function SplitRevealText({
       className={`inline ${className}`}
       aria-label={text}
     >
-      <Tag className="inline">
+      <Tag className="inline text-inherit">
         {words.map((word, i) => (
           <span
             key={`${word}-${i}`}

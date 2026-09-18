@@ -38,7 +38,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--surface-warm)] transition-colors duration-250">
+    <footer className="relative z-[1] border-t border-[var(--border)] bg-[var(--surface-warm)] transition-colors duration-250">
       <div className="section-container py-14 lg:py-18">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8">
           {/* Brand */}
@@ -62,15 +62,25 @@ export default function Footer() {
 
           {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-2.5">
-            {footerLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="font-mono text-xs font-medium tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {footerLinks.map((link) =>
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="font-mono text-xs font-medium tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="font-mono text-xs font-medium tracking-wider text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+                >
+                  {link.label}
+                </a>
+              ),
+            )}
           </div>
 
           {/* Social Links */}

@@ -11,6 +11,7 @@ export default function AboutSection() {
     <section
       id="about"
       className="section-py border-t border-[var(--border)] relative scroll-mt-20"
+      data-contour-section="quiet"
     >
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">

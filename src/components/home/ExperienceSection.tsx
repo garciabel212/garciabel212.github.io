@@ -43,7 +43,8 @@ export default function ExperienceSection() {
   return (
     <section
       id="experience"
-      className="section-py border-t border-[var(--border)] relative scroll-mt-20 bg-[var(--surface-warm)]"
+      className="section-py border-t border-[var(--border)] relative scroll-mt-20 bg-[var(--surface-warm-translucent)]"
+      data-contour-section="quiet"
     >
       <div className="section-container">
         

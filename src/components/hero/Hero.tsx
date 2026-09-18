@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowDown, Mail, FileDown, ArrowUpRight, CheckCircle2, Layers, Box } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
@@ -20,8 +21,13 @@ interface ProjectTab {
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
+  const navigate = useNavigate();
   const baseUrl = import.meta.env.BASE_URL;
   const [activeTab, setActiveTab] = useState<'service-ops' | 'garage'>('service-ops');
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('contour-project-change', { detail: activeTab }));
+  }, [activeTab]);
 
   const tabs: ProjectTab[] = [
     {
@@ -58,15 +64,15 @@ export default function Hero() {
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      window.history.pushState(null, '', `#${id}`);
-    }
+    navigate({ pathname: '/', hash: `#${id}` });
   };
 
   return (
-    <section className="relative min-h-[95vh] flex flex-col justify-center pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
+    <section
+      className="relative min-h-[95vh] flex flex-col justify-center pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden"
+      data-contour-section="hero"
+      data-contour-project={activeTab}
+    >
       <div className="section-container relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           

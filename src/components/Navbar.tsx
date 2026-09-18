@@ -35,18 +35,6 @@ export default function Navbar() {
     return location.pathname === href || location.pathname.startsWith(href + '/');
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith('/#') && location.pathname === '/') {
-      e.preventDefault();
-      const targetId = href.replace('/#', '');
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        window.history.pushState(null, '', `#${targetId}`);
-      }
-    }
-  };
-
   return (
     <>
       <header
@@ -75,10 +63,9 @@ export default function Navbar() {
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center gap-1.5">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
+                  to={link.href}
                   className={`relative px-4 py-2 font-mono text-xs font-semibold tracking-wider transition-colors duration-200 ${
                     isActive(link.href)
                       ? 'text-[var(--accent)]'
@@ -93,7 +80,7 @@ export default function Navbar() {
                       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     />
                   )}
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -139,17 +126,14 @@ export default function Navbar() {
           >
             <div className="flex flex-col divide-y divide-[var(--border-subtle)]">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    handleNavClick(e, link.href);
-                    setMobileOpen(false);
-                  }}
+                  to={link.href}
+                  onClick={() => setMobileOpen(false)}
                   className="py-3 font-mono text-sm font-semibold tracking-wider text-[var(--text-primary)] hover:text-[var(--accent)]"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
 

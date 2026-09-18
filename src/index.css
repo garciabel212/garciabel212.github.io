@@ -31,6 +31,10 @@
 
   --grid-color: rgba(25, 27, 30, 0.025);
   --spotlight-color: rgba(36, 82, 198, 0.04);
+  --contour-field-blue: rgba(54, 114, 220, 0.18);
+  --contour-field-cyan: rgba(72, 159, 181, 0.13);
+  --contour-field-soft: rgba(117, 160, 218, 0.10);
+  --surface-warm-translucent: rgba(250, 248, 245, 0.82);
 
   --shadow-low: 0 1px 2px rgba(25, 27, 30, 0.04), 0 2px 6px rgba(25, 27, 30, 0.03);
   --shadow-medium: 0 3px 6px -1px rgba(25, 27, 30, 0.04), 0 10px 24px -4px rgba(25, 27, 30, 0.08);
@@ -69,6 +73,10 @@
 
   --grid-color: rgba(255, 255, 255, 0.03);
   --spotlight-color: rgba(72, 120, 232, 0.06);
+  --contour-field-blue: rgba(45, 103, 205, 0.19);
+  --contour-field-cyan: rgba(42, 133, 157, 0.14);
+  --contour-field-soft: rgba(62, 92, 145, 0.12);
+  --surface-warm-translucent: rgba(26, 29, 33, 0.84);
 
   --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-medium: 0 4px 18px -2px rgba(0, 0, 0, 0.65);
@@ -82,6 +90,125 @@
   --shadow-card: var(--shadow-medium);
   --shadow-float: var(--shadow-floating);
   --shadow-lime: var(--shadow-blue);
+}
+
+/* Contour Light: a fixed viewport atmosphere rendered below all page content. */
+.contour-light {
+  isolation: isolate;
+  transition: opacity 500ms ease;
+}
+
+.contour-light__base {
+  z-index: -4;
+  background: var(--bg);
+  transition: background-color 300ms ease;
+}
+
+.contour-light__field {
+  position: absolute;
+  z-index: -3;
+  border-radius: 50%;
+  filter: blur(clamp(80px, 10vw, 150px));
+  opacity: 0.64;
+  will-change: transform, opacity;
+  transition: opacity 1400ms ease, filter 1400ms ease;
+}
+
+.contour-light__field--one {
+  width: max(680px, 68vw);
+  height: max(520px, 58vw);
+  top: -32%;
+  right: -18%;
+  background: radial-gradient(ellipse at center, var(--contour-field-blue) 0%, transparent 68%);
+  animation: contour-field-one 32s ease-in-out infinite alternate;
+}
+
+.contour-light__field--two {
+  width: max(620px, 60vw);
+  height: max(480px, 52vw);
+  bottom: -34%;
+  left: -22%;
+  background: radial-gradient(ellipse at center, var(--contour-field-cyan) 0%, transparent 70%);
+  animation: contour-field-two 38s ease-in-out infinite alternate;
+}
+
+.contour-light__field--three {
+  width: max(520px, 46vw);
+  height: max(420px, 42vw);
+  top: 28%;
+  left: 38%;
+  background: radial-gradient(ellipse at center, var(--contour-field-soft) 0%, transparent 72%);
+  animation: contour-field-three 27s ease-in-out infinite alternate;
+}
+
+.contour-light[data-scene='service'] .contour-light__field--one,
+.contour-light[data-project='service-ops'][data-scene='hero'] .contour-light__field--one {
+  opacity: 0.8;
+}
+
+.contour-light[data-scene='garage'] .contour-light__field--two,
+.contour-light[data-project='garage'][data-scene='hero'] .contour-light__field--two {
+  opacity: 0.78;
+  filter: blur(clamp(90px, 12vw, 170px));
+}
+
+.contour-light[data-scene='quiet'] .contour-light__field {
+  opacity: 0.38;
+}
+
+.contour-light[data-scene='contact'] .contour-light__field--three {
+  opacity: 0.72;
+}
+
+.contour-light__canvas {
+  z-index: -2;
+}
+
+.contour-light__grain {
+  z-index: -1;
+  opacity: 0.018;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.82) 0.8px, transparent 0.8px);
+  background-size: 22px 22px;
+  mix-blend-mode: overlay;
+}
+
+.contour-light.is-paused .contour-light__field {
+  animation-play-state: paused;
+}
+
+.motion-control {
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  color: var(--text-secondary);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.motion-control:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.motion-control:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+@keyframes contour-field-one {
+  0% { transform: translate3d(-3%, -2%, 0) scale(0.94); }
+  52% { opacity: 0.82; }
+  100% { transform: translate3d(9%, 8%, 0) scale(1.08); }
+}
+
+@keyframes contour-field-two {
+  0% { transform: translate3d(2%, 6%, 0) scale(1.04); }
+  48% { opacity: 0.5; }
+  100% { transform: translate3d(12%, -9%, 0) scale(0.93); }
+}
+
+@keyframes contour-field-three {
+  0% { transform: translate3d(-7%, 4%, 0) scale(0.91); opacity: 0.46; }
+  100% { transform: translate3d(8%, -8%, 0) scale(1.11); opacity: 0.7; }
 }
 
 /* ─── BASE LAYER ─── */

@@ -53,6 +53,7 @@ export default function ServiceOpsSection() {
     <section
       id="service-operations"
       className="section-py border-t border-[var(--border)] relative scroll-mt-20"
+      data-contour-section="service"
     >
       <div id="work" className="absolute -top-20" />
       <div className="section-container">

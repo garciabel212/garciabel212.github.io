@@ -52,12 +52,15 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       if (!anchor) return;
 
       const href = anchor.getAttribute('href');
-      if (href && href.startsWith('#') && href.length > 1) {
-        const targetElement = document.querySelector(href);
-        if (targetElement instanceof HTMLElement) {
-          e.preventDefault();
-          lenisInstance.scrollTo(targetElement, { offset: -30 });
-        }
+      // HashRouter routes also begin with "#" (for example #/projects/...).
+      // Only plain fragment IDs belong to the in-page scrolling system.
+      if (!href || !href.startsWith('#') || href.startsWith('#/') || href.length <= 1) return;
+
+      const targetId = decodeURIComponent(href.slice(1));
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        e.preventDefault();
+        lenisInstance.scrollTo(targetElement, { offset: -72 });
       }
     };
 
