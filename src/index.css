@@ -289,9 +289,9 @@
 
   /* Editorial Serif Typography */
   .text-hero-giant {
-    font-size: clamp(2.3rem, 4.2vw, 3.8rem);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
     font-weight: 700;
   }
 
@@ -300,6 +300,25 @@
     line-height: 1.12;
     letter-spacing: -0.02em;
     font-weight: 700;
+  }
+
+  /* Contour Illuminated Text Transition */
+  .text-contour-illuminate {
+    display: inline-block;
+    color: var(--text-primary);
+    transition: color 400ms ease, text-shadow 400ms ease, -webkit-text-stroke 400ms ease;
+  }
+
+  .text-contour-illuminate:hover {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+    text-shadow: 0 0 16px rgba(var(--accent-rgb), 0.35);
+  }
+
+  .text-contour-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+    text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.28);
   }
 
   /* Interactive Buttons */
