@@ -19,7 +19,7 @@ const MOTION_STORAGE_KEY = 'jose-garcia-contour-motion-paused';
 
 const SCENE_PROFILES: Record<Scene, ContourProfile> = {
   hero: {
-    lineOpacity: 0.082,
+    lineOpacity: 0.135,
     wave: 0.78,
     density: 1,
     route: 0.18,
@@ -27,7 +27,7 @@ const SCENE_PROFILES: Record<Scene, ContourProfile> = {
     glow: 0.82,
   },
   service: {
-    lineOpacity: 0.105,
+    lineOpacity: 0.17,
     wave: 1,
     density: 1,
     route: 1,
@@ -35,7 +35,7 @@ const SCENE_PROFILES: Record<Scene, ContourProfile> = {
     glow: 1,
   },
   garage: {
-    lineOpacity: 0.09,
+    lineOpacity: 0.15,
     wave: 0.58,
     density: 0.9,
     route: 0.08,
@@ -43,7 +43,7 @@ const SCENE_PROFILES: Record<Scene, ContourProfile> = {
     glow: 0.9,
   },
   quiet: {
-    lineOpacity: 0.055,
+    lineOpacity: 0.085,
     wave: 0.45,
     density: 0.58,
     route: 0,
@@ -51,7 +51,7 @@ const SCENE_PROFILES: Record<Scene, ContourProfile> = {
     glow: 0.56,
   },
   contact: {
-    lineOpacity: 0.075,
+    lineOpacity: 0.125,
     wave: 0.7,
     density: 0.86,
     route: 0.16,
@@ -91,7 +91,7 @@ function profileForScene(scene: Scene, project: ProjectVariant): ContourProfile 
     profile.architecture = 0.72;
     profile.route = 0.04;
     profile.wave = 0.58;
-    profile.lineOpacity = 0.09;
+    profile.lineOpacity = 0.15;
   } else if (scene === 'hero') {
     profile.route = 0.48;
   }
@@ -187,9 +187,9 @@ export default function Atmosphere() {
         pointer.y,
         radius,
       );
-      const centerAlpha = (resolvedTheme === 'dark' ? 0.105 : 0.075) * pointer.presence * current.glow;
-      gradient.addColorStop(0, `rgba(62, 139, 232, ${centerAlpha})`);
-      gradient.addColorStop(0.42, `rgba(74, 164, 194, ${centerAlpha * 0.48})`);
+      const centerAlpha = (resolvedTheme === 'dark' ? 0.19 : 0.145) * pointer.presence * current.glow;
+      gradient.addColorStop(0, `rgba(42, 125, 255, ${centerAlpha})`);
+      gradient.addColorStop(0.42, `rgba(26, 188, 216, ${centerAlpha * 0.52})`);
       gradient.addColorStop(1, 'rgba(74, 164, 194, 0)');
       context.fillStyle = gradient;
       context.fillRect(0, 0, width, height);
@@ -227,8 +227,8 @@ export default function Atmosphere() {
       const influenceRadius = Math.min(400, Math.max(260, width * 0.27));
       const displacement = mobile ? 0 : 22 * pointer.presence;
       const darkBoost = resolvedTheme === 'dark' ? 1.28 : 1;
-      const baseRgb = resolvedTheme === 'dark' ? '103, 165, 225' : '36, 82, 198';
-      const cyanRgb = resolvedTheme === 'dark' ? '91, 183, 194' : '48, 126, 155';
+      const baseRgb = resolvedTheme === 'dark' ? '92, 164, 255' : '30, 91, 224';
+      const cyanRgb = resolvedTheme === 'dark' ? '66, 210, 225' : '19, 148, 181';
 
       for (let line = 0; line < lineCount; line += 1) {
         const densityFade = line % 2 === 0 ? current.density : current.density * current.density;

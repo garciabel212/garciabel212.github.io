@@ -31,9 +31,9 @@
 
   --grid-color: rgba(25, 27, 30, 0.025);
   --spotlight-color: rgba(36, 82, 198, 0.04);
-  --contour-field-blue: rgba(54, 114, 220, 0.18);
-  --contour-field-cyan: rgba(72, 159, 181, 0.13);
-  --contour-field-soft: rgba(117, 160, 218, 0.10);
+  --contour-field-blue: rgba(37, 99, 235, 0.34);
+  --contour-field-cyan: rgba(6, 182, 212, 0.25);
+  --contour-field-soft: rgba(99, 102, 241, 0.19);
   --surface-warm-translucent: rgba(250, 248, 245, 0.82);
 
   --shadow-low: 0 1px 2px rgba(25, 27, 30, 0.04), 0 2px 6px rgba(25, 27, 30, 0.03);
@@ -73,9 +73,9 @@
 
   --grid-color: rgba(255, 255, 255, 0.03);
   --spotlight-color: rgba(72, 120, 232, 0.06);
-  --contour-field-blue: rgba(45, 103, 205, 0.19);
-  --contour-field-cyan: rgba(42, 133, 157, 0.14);
-  --contour-field-soft: rgba(62, 92, 145, 0.12);
+  --contour-field-blue: rgba(43, 108, 238, 0.34);
+  --contour-field-cyan: rgba(21, 178, 207, 0.25);
+  --contour-field-soft: rgba(82, 104, 218, 0.20);
   --surface-warm-translucent: rgba(26, 29, 33, 0.84);
 
   --shadow-low: 0 1px 3px rgba(0, 0, 0, 0.45);
@@ -108,8 +108,8 @@
   position: absolute;
   z-index: -3;
   border-radius: 50%;
-  filter: blur(clamp(80px, 10vw, 150px));
-  opacity: 0.64;
+  filter: blur(clamp(80px, 10vw, 150px)) saturate(1.35);
+  opacity: 0.78;
   will-change: transform, opacity;
   transition: opacity 1400ms ease, filter 1400ms ease;
 }
@@ -143,21 +143,21 @@
 
 .contour-light[data-scene='service'] .contour-light__field--one,
 .contour-light[data-project='service-ops'][data-scene='hero'] .contour-light__field--one {
-  opacity: 0.8;
+  opacity: 0.94;
 }
 
 .contour-light[data-scene='garage'] .contour-light__field--two,
 .contour-light[data-project='garage'][data-scene='hero'] .contour-light__field--two {
-  opacity: 0.78;
-  filter: blur(clamp(90px, 12vw, 170px));
+  opacity: 0.92;
+  filter: blur(clamp(90px, 12vw, 170px)) saturate(1.4);
 }
 
 .contour-light[data-scene='quiet'] .contour-light__field {
-  opacity: 0.38;
+  opacity: 0.52;
 }
 
 .contour-light[data-scene='contact'] .contour-light__field--three {
-  opacity: 0.72;
+  opacity: 0.88;
 }
 
 .contour-light__canvas {
