@@ -1,9 +1,8 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import CommandPalette from '@/components/CommandPalette';
 import Atmosphere from '@/components/background/Atmosphere';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import SmoothScroll from '@/components/motion/SmoothScroll';
@@ -128,44 +127,23 @@ function AppRoutes() {
 }
 
 export default function App() {
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const openCommandPalette = useCallback(() => setCommandPaletteOpen(true), []);
-  const closeCommandPalette = useCallback(() => setCommandPaletteOpen(false), []);
-
-  useEffect(() => {
-    const handleShortcut = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        if (!window.matchMedia('(min-width: 768px)').matches) return;
-        event.preventDefault();
-        setCommandPaletteOpen((open) => !open);
-      }
-    };
-
-    window.addEventListener('keydown', handleShortcut);
-    return () => window.removeEventListener('keydown', handleShortcut);
-  }, []);
-
   return (
     <ThemeProvider>
       <SmoothScroll>
         <HashRouter>
           <MotionConfig reducedMotion="user">
             <div className="site-shell min-h-screen flex flex-col relative">
-              {/* Global Living Atmosphere Background */}
+              {/* Global Editorial Atmosphere Background */}
               <Atmosphere />
 
               <ScrollProgress />
-              <Navbar onOpenCommandPalette={openCommandPalette} />
+              <Navbar />
 
               <div className="relative z-[1] flex-1">
                 <AppRoutes />
               </div>
 
               <Footer />
-
-              <AnimatePresence>
-                {commandPaletteOpen && <CommandPalette onClose={closeCommandPalette} />}
-              </AnimatePresence>
             </div>
           </MotionConfig>
         </HashRouter>

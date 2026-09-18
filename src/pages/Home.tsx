@@ -1,33 +1,29 @@
 import Hero from '@/components/hero/Hero';
-import PositioningStatement from '@/components/home/PositioningStatement';
-import FeaturedProject from '@/components/projects/FeaturedProject';
-import SolutionLifecycle from '@/components/lifecycle/SolutionLifecycle';
-import ExperienceRail from '@/components/experience/ExperienceRail';
-import TechnicalIndex from '@/components/skills/TechnicalIndex';
+import ServiceOpsSection from '@/components/home/ServiceOpsSection';
+import GarageSection from '@/components/home/GarageSection';
+import ExperienceSection from '@/components/home/ExperienceSection';
+import AboutSection from '@/components/home/AboutSection';
 import HomeContactCta from '@/components/home/HomeContactCta';
 
 export default function Home() {
   return (
     <main className="relative z-10 overflow-hidden text-[var(--text-primary)]">
-      {/* 01. HERO — Jose comes first with 3D Systems Core */}
+      {/* 01. HERO — Jose comes first with interactive project showcase */}
       <Hero />
 
-      {/* 02. POSITIONING & MANIFESTO — Systems Thinking */}
-      <PositioningStatement />
+      {/* 02. CASE STUDY 01 — Service Operations & Asset Intelligence */}
+      <ServiceOpsSection />
 
-      {/* 03. FEATURED PROJECTS — Service Map Planner & Scale Garage Studio */}
-      <FeaturedProject />
+      {/* 03. CASE STUDY 02 — Scale Garage Studio 3D Configurator */}
+      <GarageSection />
 
-      {/* 04. METHODOLOGY — Interactive 6-Stage Solution Lifecycle */}
-      <SolutionLifecycle />
+      {/* 04. EXPERIENCE & METHODOLOGY — Solutions Lifecycle & Career Track */}
+      <ExperienceSection />
 
-      {/* 05. EXPERIENCE RAIL — Evolving Technical Journey (2021–2026) */}
-      <ExperienceRail />
+      {/* 05. ABOUT — Personal Background, Philosophy & Qualifications */}
+      <AboutSection />
 
-      {/* 06. TECHNICAL INDEX — Engineering Specification Catalog */}
-      <TechnicalIndex />
-
-      {/* 07. FINAL CTA — Dramatic Closing Contact Statement */}
+      {/* 06. CONTACT CTA — Direct Inquiry, LinkedIn & Résumé */}
       <HomeContactCta />
     </main>
   );

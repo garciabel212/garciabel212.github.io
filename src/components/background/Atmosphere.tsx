@@ -37,23 +37,19 @@ export default function Atmosphere() {
       {/* 1. Base Background Color Transitioned by CSS */}
       <div className="absolute inset-0 bg-[var(--bg)] transition-colors duration-300" />
 
-      {/* 2. Fine Technical Grid (2–4% opacity) */}
+      {/* 2. Very subtle ambient warmth in the upper hero area */}
       <div
-        className="absolute inset-0"
+        className="absolute -top-[15vw] left-1/2 -translate-x-1/2 w-[85vw] h-[55vw] rounded-full blur-[140px] opacity-40 pointer-events-none"
         style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px)
-          `,
-          backgroundSize: '48px 48px',
+          background: 'radial-gradient(ellipse at center, rgba(36, 82, 198, 0.06), transparent 70%)',
         }}
       />
 
-      {/* 3. Subtle Radial Illumination at Header / Center */}
+      {/* 3. Subtle warm radial highlight */}
       <div
-        className="absolute -top-[20vw] left-1/2 -translate-x-1/2 w-[90vw] sm:w-[80vw] h-[60vw] sm:h-[50vw] rounded-full blur-[140px] opacity-60"
+        className="absolute top-[40vh] right-[-10vw] w-[45vw] h-[45vw] rounded-full blur-[160px] opacity-25 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, var(--spotlight-color), transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(235, 230, 220, 0.8), transparent 70%)',
         }}
       />
 

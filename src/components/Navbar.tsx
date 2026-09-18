@@ -1,21 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Command } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './theme/ThemeToggle';
 
 const navLinks = [
-  { label: 'WORK', href: '/#selected-work' },
-  { label: 'EXPERIENCE', href: '/experience' },
-  { label: 'ABOUT', href: '/about' },
-  { label: 'CONTACT', href: '/contact' },
+  { label: 'WORK', href: '/#work' },
+  { label: 'EXPERIENCE', href: '/#experience' },
+  { label: 'ABOUT', href: '/#about' },
+  { label: 'CONTACT', href: '/#contact' },
 ];
 
-interface NavbarProps {
-  onOpenCommandPalette?: () => void;
-}
-
-export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -33,44 +29,56 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
 
   const isActive = (href: string) => {
     if (href.startsWith('/#')) {
-      return location.pathname === '/' && location.hash === href.replace('/', '');
+      const targetHash = href.replace('/', '');
+      return location.pathname === '/' && (location.hash === targetHash || (!location.hash && targetHash === '#work'));
     }
     return location.pathname === href || location.pathname.startsWith(href + '/');
   };
 
-  const baseUrl = import.meta.env.BASE_URL;
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/#') && location.pathname === '/') {
+      e.preventDefault();
+      const targetId = href.replace('/#', '');
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `#${targetId}`);
+      }
+    }
+  };
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-250 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
             ? 'nav-translucent shadow-[var(--shadow-low)]'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div className="section-container">
-          <nav className="flex items-center justify-between h-16 lg:h-20">
+          <nav className="flex items-center justify-between h-18 lg:h-22">
             {/* Identity Brand Mark */}
             <Link
               to="/"
               className="flex items-baseline gap-2.5 group"
-              aria-label="Jose Garcia — Systems Lab Home"
+              aria-label="Jose Garcia Portfolio Home"
             >
-              <span className="font-display font-black text-xl tracking-tight text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
-                JG.
+              <span className="font-serif font-bold text-xl sm:text-2xl text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors tracking-tight">
+                Jose Garcia
               </span>
               <span className="font-mono text-[10px] tracking-widest text-[var(--text-muted)] uppercase hidden sm:inline-block">
-                SYSTEMS LAB
+                SOLUTIONS &middot; SYSTEMS
               </span>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex items-center gap-1.5">
               {navLinks.map((link) => (
-                <Link
+                <a
                   key={link.href}
-                  to={link.href}
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={`relative px-4 py-2 font-mono text-xs font-semibold tracking-wider transition-colors duration-200 ${
                     isActive(link.href)
                       ? 'text-[var(--accent)]'
@@ -85,32 +93,21 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
                       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     />
                   )}
-                </Link>
+                </a>
               ))}
             </div>
 
-            {/* Right Controls: ThemeToggle, CommandPalette, Resume */}
+            {/* Right Controls: ThemeToggle, Resume Button */}
             <div className="hidden md:flex items-center gap-3">
               <ThemeToggle />
 
-              {onOpenCommandPalette && (
-                <button
-                  type="button"
-                  onClick={onOpenCommandPalette}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-colors font-mono text-xs"
-                  aria-label="Open command palette"
-                >
-                  <Command size={12} />
-                  <span>K</span>
-                </button>
-              )}
-
               <a
                 href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
-                title="Résumé available on request"
-                className="btn-secondary px-3.5 py-1.5 rounded-xl font-mono text-xs font-semibold tracking-wider"
+                title="Request current résumé via email"
+                className="btn-secondary px-4 py-2 rounded-xl font-mono text-xs font-semibold tracking-wider inline-flex items-center gap-1.5"
               >
-                R&Eacute;SUM&Eacute;
+                <span>R&Eacute;SUM&Eacute;</span>
+                <ArrowUpRight size={13} className="text-[var(--text-muted)]" />
               </a>
             </div>
 
@@ -138,31 +135,35 @@ export default function Navbar({ onOpenCommandPalette }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 p-5 bg-[var(--surface-elevated)] border-b border-[var(--border)] shadow-[var(--shadow-high)] md:hidden flex flex-col gap-4"
+            className="fixed inset-x-0 top-[72px] z-50 p-6 bg-[var(--surface)] border-b border-[var(--border)] shadow-[var(--shadow-floating)] md:hidden flex flex-col gap-5"
           >
             <div className="flex flex-col divide-y divide-[var(--border-subtle)]">
               {navLinks.map((link) => (
-                <Link
+                <a
                   key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileOpen(false)}
+                  href={link.href}
+                  onClick={(e) => {
+                    handleNavClick(e, link.href);
+                    setMobileOpen(false);
+                  }}
                   className="py-3 font-mono text-sm font-semibold tracking-wider text-[var(--text-primary)] hover:text-[var(--accent)]"
                 >
                   {link.label}
-                </Link>
+                </a>
               ))}
             </div>
 
-            <div className="pt-2 flex items-center justify-between border-t border-[var(--border)]">
+            <div className="pt-3 flex items-center justify-between border-t border-[var(--border)]">
               <span className="font-mono text-xs text-[var(--text-muted)]">
                 BOCA RATON, FL
               </span>
               <a
                 href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
-                title="Résumé available on request"
-                className="btn-lime px-4 py-2 rounded-lg font-mono text-xs font-bold"
+                title="Request current résumé via email"
+                className="btn-primary px-4 py-2.5 rounded-xl font-mono text-xs font-bold inline-flex items-center gap-1.5"
               >
-                R&Eacute;SUM&Eacute; ON REQUEST
+                <span>R&Eacute;SUM&Eacute; ON REQUEST</span>
+                <ArrowUpRight size={13} />
               </a>
             </div>
           </motion.div>

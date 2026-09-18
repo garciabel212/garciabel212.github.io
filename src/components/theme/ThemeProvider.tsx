@@ -12,20 +12,20 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'jose-garcia-theme-preference';
+const STORAGE_KEY = 'jose-garcia-editorial-theme-v1';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'system';
+    if (typeof window === 'undefined') return 'light';
     const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+    return saved === 'light' || saved === 'dark' ? saved : 'light';
   });
 
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
-    if (typeof window === 'undefined') return 'dark';
+    if (typeof window === 'undefined') return 'light';
     if (theme === 'light') return 'light';
     if (theme === 'dark') return 'dark';
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   // Handle system preference changes & root attribute updates
